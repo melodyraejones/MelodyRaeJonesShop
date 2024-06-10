@@ -589,3 +589,25 @@ function mrj_on_user_delete($user_id) {
 // Add the hook into WordPress
 add_action('delete_user', 'mrj_on_user_delete');
 
+
+
+// Custom wp_mail function for logging
+add_filter('wp_mail', 'custom_wp_mail');
+function custom_wp_mail($args) {
+    // Set default headers if not present
+    if (empty($args['headers'])) {
+        $args['headers'] = array(
+            'From: Your Name <melody@melodyraejones.com>',
+            'Content-Type: text/html; charset=UTF-8'
+        );
+    }
+
+    // Log email arguments for debugging
+    error_log('Sending email to: ' . print_r($args['to'], true));
+    error_log('Email subject: ' . $args['subject']);
+    error_log('Email message: ' . $args['message']);
+    error_log('Email headers: ' . print_r($args['headers'], true));
+
+    // Return modified arguments
+    return $args;
+}
