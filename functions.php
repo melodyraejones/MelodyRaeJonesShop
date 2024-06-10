@@ -1,10 +1,6 @@
 <?php 
 require_once get_template_directory() . '/vendor/autoload.php';
 
-//cart-total-route
-require get_theme_file_path('/inc/cart-total-route.php');
-require get_theme_file_path('/inc/checkout-route.php');
-
 //cart url
 function get_cart_url() {
     if (WP_ENV === 'production') {
@@ -14,81 +10,68 @@ function get_cart_url() {
     }
 }
 
-
-
-
 // Custom wp_mail function for logging
-function custom_wp_mail($args) {
-    // Set default headers if not present
-    if (empty($args['headers'])) {
-        $args['headers'] = array(
-            'From: Your Name <melody@melodyraejones.com>',
-            'Content-Type: text/html; charset=UTF-8'
-        );
+if (!function_exists('custom_wp_mail')) {
+    function custom_wp_mail($args) {
+        // Set default headers if not present
+        if (empty($args['headers'])) {
+            $args['headers'] = array(
+                'From: Your Name <melody@melodyraejones.com>',
+                'Content-Type: text/html; charset=UTF-8'
+            );
+        }
+
+        // Log email arguments for debugging
+        error_log(print_r($args, true));
+
+        // Return modified arguments
+        return $args;
     }
-
-    // Log email arguments for debugging
-    error_log('Sending email to: ' . print_r($args['to'], true));
-    error_log('Email subject: ' . $args['subject']);
-    error_log('Email message: ' . $args['message']);
-    error_log('Email headers: ' . print_r($args['headers'], true));
-
-    // Return modified arguments
-    return $args;
 }
 add_filter('wp_mail', 'custom_wp_mail');
 
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
+        global $wpdb, $wp_hasher;
+
+        // Get user data
         $user = get_userdata($user_id);
-        $user_email = $user->user_email;
-        $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-
-        // Admin email notification
-        $admin_message  = sprintf(__('New user registration on your site %s:'), $blogname) . "\r\n\r\n";
-        $admin_message .= sprintf(__('Username: %s'), $user->user_login) . "\r\n\r\n";
-        $admin_message .= sprintf(__('Email: %s'), $user->user_email) . "\r\n";
-
-        // Log admin email details
-        error_log("Sending admin notification to: " . get_option('admin_email'));
-
-        $admin_sent = wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), $blogname), $admin_message);
-
-        if ($admin_sent) {
-            error_log("Admin notification sent successfully.");
-        } else {
-            error_log("Failed to send admin notification.");
-        }
-
-        if ('admin' === $notify || empty($notify)) {
+        if (!$user) {
+            error_log("Failed to get user data for user ID: $user_id");
             return;
         }
 
-        // Generate something random for a password reset key.
-        $key = get_password_reset_key($user);
-        if (is_wp_error($key)) {
-            return;
-        }
+        $user_login = stripslashes($user->user_login);
+        $user_email = stripslashes($user->user_email);
 
-        // User email notification
-        $user_message  = __('Username:') . ' ' . $user->user_login . "\r\n";
-        $user_message .= __('To set your password, visit the following address:') . "\r\n";
-        $user_message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n";
-        $user_message .= wp_login_url() . "\r\n";
+        // Generate password reset key
+        $key = wp_generate_password(20, false);
+        do_action('retrieve_password_key', $user->user_login, $key);
 
-        // Log user email details
-        error_log("Sending user notification to: " . $user_email);
+        // Send the password reset link email
+        $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
+        $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
+        $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
 
-        $user_sent = wp_mail($user_email, sprintf(__('[%s] Your username and password info'), $blogname), $user_message);
+        // Email headers
+        $headers = array('Content-Type: text/plain; charset=UTF-8');
 
-        if ($user_sent) {
-            error_log("User notification sent successfully.");
+        // Log email details for debugging
+        error_log("Sending new user notification to: $user_email");
+
+        // Use wp_mail to send the email
+        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
+
+        if ($sent) {
+            error_log("New user notification email sent to: $user_email");
         } else {
-            error_log("Failed to send user notification.");
+            error_log("Failed to send new user notification email to: $user_email");
         }
     }
 }
+
+// Hook into user registration
 add_action('user_register', 'wp_new_user_notification');
 
 // Disable default password change notification
@@ -97,10 +80,6 @@ if (!function_exists('wp_password_change_notification')) {
         return; // Disable the default notification for password change
     }
 }
-
-
-
-
 
 //direct checkout route:
 
@@ -143,8 +122,6 @@ add_action('rest_api_init', function() {
     ]);
 });
 
-
-
 function handle_custom_contact_form_submission() {
     if (isset($_POST['contact_form_nonce']) && wp_verify_nonce($_POST['contact_form_nonce'], 'custom_contact_form_action')) {
         $name = sanitize_text_field($_POST['full-name']);
@@ -168,7 +145,6 @@ function handle_custom_contact_form_submission() {
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
             $mail->send();
            
-
             wp_redirect(home_url('/sent'));
             exit;
         } catch (Exception $e) {
@@ -183,14 +159,10 @@ function handle_custom_contact_form_submission() {
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
 
-
-//
-
 function enqueue_dashicons_front_end() {
     wp_enqueue_style('dashicons');
 }
 add_action('wp_enqueue_scripts', 'enqueue_dashicons_front_end');
-
 
 function modify_audio_query($query) {
     // Check if it's the correct query to modify
@@ -202,10 +174,9 @@ function modify_audio_query($query) {
 
 add_action('pre_get_posts', 'modify_audio_query');
 
-
-
-
-
+//cart-total-route
+require get_theme_file_path('/inc/cart-total-route.php');
+require get_theme_file_path('/inc/checkout-route.php');
 
 function handle_add_to_cart_request(WP_REST_Request $request) {
     $params = $request->get_params();
@@ -260,9 +231,6 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
     ], 200);
 }
 
-
-
-
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
         'methods' => 'POST',
@@ -272,13 +240,6 @@ add_action('rest_api_init', function () {
         }
     ]);
 });
-
-
-
-
-
-
-
 
 function my_register_cart_meta() {
     register_rest_field('cart', 'program_price', [
@@ -334,15 +295,13 @@ function my_register_cart_meta() {
 
 add_action('rest_api_init', 'my_register_cart_meta');
 
-
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
         'methods' => 'POST',
         'callback' => 'handle_add_to_cart_request',
-      'permission_callback' => function () {
-    return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
-}
-
+        'permission_callback' => function () {
+            return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
+        }
     ]);
 });
 
@@ -389,19 +348,12 @@ add_filter('rest_cart_query', function ($args, $request) {
     return $args;
 }, 10, 2);
 
-
-
 add_filter('the_title', function($title, $id = null) {
     if (get_post_type($id) == 'cart') {
         return preg_replace('/^Private:\s*/', '', $title);
     }
     return $title;
 }, 10, 2);
-
-// First, use the correct path to include the Composer autoloader.
-// The __DIR__ constant ensures you get the directory of the current file.
-// Adjust the path if your 'vendor' directory is elsewhere.
-// require_once(__DIR__ . '/vendor/autoload.php');
 
 function mrj_files() {
     // Enqueue a CSS file
@@ -415,8 +367,6 @@ function mrj_files() {
 }
 
 add_action('wp_enqueue_scripts', 'mrj_files');
-
-
 
 function mrj_features() {
     add_theme_support('title-tag');
@@ -446,26 +396,24 @@ function mrj_enqueue_scripts() {
 
 add_action('wp_enqueue_scripts', 'mrj_enqueue_scripts');
 
-
-
 //redirect subscriber account out of admin to the homepage
 add_action('admin_init','redirectSubsToFrontend');
 
 function redirectSubsToFrontend(){
-$currentUser = wp_get_current_user();
+    $currentUser = wp_get_current_user();
     if(count($currentUser -> roles) == 1 AND $currentUser-> roles[0] == 'subscriber' ){
             wp_redirect(site_url('/'));
             exit;
-}
+    }
 }
 //hide dashboard for users
 add_action('wp_loaded','noSubsAdminBar');
 
 function noSubsAdminBar(){
-$currentUser = wp_get_current_user();
+    $currentUser = wp_get_current_user();
     if(count($currentUser -> roles) == 1 AND $currentUser-> roles[0] == 'subscriber' ){
            show_admin_bar(false);
-}
+    }
 }
 //Customize login screen
 add_filter('login_headerurl','headerUrl');
@@ -481,10 +429,10 @@ function loginCSS(){
 add_filter('login_headertitle', 'loginTitle');
 
 function loginTitle(){
-return get_bloginfo('name');
+    return get_bloginfo('name');
 }
 
-
+//user program access
 function mrj_on_user_register($user_id) { 
     global $wpdb;
     $user_info = get_userdata($user_id);
@@ -540,9 +488,6 @@ function mrj_on_user_register($user_id) {
     }
 }
 
-// add_action('user_register', 'mrj_on_user_register');
-
-
 // Hook into user account deletion and clean up custom data
 function mrj_on_user_delete($user_id) {
     global $wpdb;
@@ -560,6 +505,3 @@ function mrj_on_user_delete($user_id) {
 
 // Add the hook into WordPress
 add_action('delete_user', 'mrj_on_user_delete');
-
-
-
