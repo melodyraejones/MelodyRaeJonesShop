@@ -1,6 +1,10 @@
 <?php 
 require_once get_template_directory() . '/vendor/autoload.php';
 
+//cart-total-route
+require get_theme_file_path('/inc/cart-total-route.php');
+require get_theme_file_path('/inc/checkout-route.php');
+
 //cart url
 function get_cart_url() {
     if (WP_ENV === 'production') {
@@ -14,7 +18,6 @@ function get_cart_url() {
 
 
 // Custom wp_mail function for logging
-add_filter('wp_mail', 'custom_wp_mail');
 function custom_wp_mail($args) {
     // Set default headers if not present
     if (empty($args['headers'])) {
@@ -25,12 +28,15 @@ function custom_wp_mail($args) {
     }
 
     // Log email arguments for debugging
-    error_log(print_r($args, true));
+    error_log('Sending email to: ' . print_r($args['to'], true));
+    error_log('Email subject: ' . $args['subject']);
+    error_log('Email message: ' . $args['message']);
+    error_log('Email headers: ' . print_r($args['headers'], true));
 
     // Return modified arguments
     return $args;
 }
-
+add_filter('wp_mail', 'custom_wp_mail');
 
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
@@ -83,10 +89,7 @@ if (!function_exists('wp_new_user_notification')) {
         }
     }
 }
-
 add_action('user_register', 'wp_new_user_notification');
-
-
 
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
@@ -94,6 +97,7 @@ if (!function_exists('wp_password_change_notification')) {
         return; // Disable the default notification for password change
     }
 }
+
 
 
 
@@ -200,9 +204,6 @@ add_action('pre_get_posts', 'modify_audio_query');
 
 
 
-//cart-total-route
-require get_theme_file_path('/inc/cart-total-route.php');
-require get_theme_file_path('/inc/checkout-route.php');
 
 
 
@@ -483,36 +484,7 @@ function loginTitle(){
 return get_bloginfo('name');
 }
 
-//user program access
-// function mrj_on_user_register($user_id) {
-//     global $wpdb;
-//     $user_info = get_userdata($user_id);
-//     $table_name = $wpdb->prefix . 'user_program_access';
 
-//     // Fetch all programs
-//     $programs = get_posts([
-//         'post_type' => 'program',
-//         'posts_per_page' => -1
-//     ]);
-
-//     // Prepare the programs access data
-//     $programs_access = [];
-//     foreach ($programs as $program) {
-//         $programs_access[] = [
-//             'program_id' => $program->ID,
-//             'program_name' => $program->post_title,
-//             'access' => false  // Default to no access
-//         ];
-//     }
-
-//     // Insert data into custom table
-//     $wpdb->insert($table_name, [
-//         'user_id' => $user_id,
-//         'user_email' => $user_info->user_email,
-//         'programs_access' => json_encode($programs_access)  // Store as JSON
-//     ]);
-// }
-// add_action('user_register', 'mrj_on_user_register');
 function mrj_on_user_register($user_id) { 
     global $wpdb;
     $user_info = get_userdata($user_id);
@@ -591,23 +563,3 @@ add_action('delete_user', 'mrj_on_user_delete');
 
 
 
-// Custom wp_mail function for logging
-add_filter('wp_mail', 'custom_wp_mail');
-function custom_wp_mail($args) {
-    // Set default headers if not present
-    if (empty($args['headers'])) {
-        $args['headers'] = array(
-            'From: Your Name <melody@melodyraejones.com>',
-            'Content-Type: text/html; charset=UTF-8'
-        );
-    }
-
-    // Log email arguments for debugging
-    error_log('Sending email to: ' . print_r($args['to'], true));
-    error_log('Email subject: ' . $args['subject']);
-    error_log('Email message: ' . $args['message']);
-    error_log('Email headers: ' . print_r($args['headers'], true));
-
-    // Return modified arguments
-    return $args;
-}
