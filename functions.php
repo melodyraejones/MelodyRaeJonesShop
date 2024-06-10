@@ -31,6 +31,7 @@ function custom_wp_mail($args) {
     return $args;
 }
 
+
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
@@ -43,7 +44,16 @@ if (!function_exists('wp_new_user_notification')) {
         $admin_message .= sprintf(__('Username: %s'), $user->user_login) . "\r\n\r\n";
         $admin_message .= sprintf(__('Email: %s'), $user->user_email) . "\r\n";
 
-        @wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), $blogname), $admin_message);
+        // Log admin email details
+        error_log("Sending admin notification to: " . get_option('admin_email'));
+
+        $admin_sent = wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), $blogname), $admin_message);
+
+        if ($admin_sent) {
+            error_log("Admin notification sent successfully.");
+        } else {
+            error_log("Failed to send admin notification.");
+        }
 
         if ('admin' === $notify || empty($notify)) {
             return;
@@ -59,14 +69,23 @@ if (!function_exists('wp_new_user_notification')) {
         $user_message  = __('Username:') . ' ' . $user->user_login . "\r\n";
         $user_message .= __('To set your password, visit the following address:') . "\r\n";
         $user_message .= '<' . network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') . ">\r\n";
-
         $user_message .= wp_login_url() . "\r\n";
 
-        @wp_mail($user_email, sprintf(__('[%s] Your username and password info'), $blogname), $user_message);
+        // Log user email details
+        error_log("Sending user notification to: " . $user_email);
+
+        $user_sent = wp_mail($user_email, sprintf(__('[%s] Your username and password info'), $blogname), $user_message);
+
+        if ($user_sent) {
+            error_log("User notification sent successfully.");
+        } else {
+            error_log("Failed to send user notification.");
+        }
     }
 }
 
 add_action('user_register', 'wp_new_user_notification');
+
 
 
 // Disable default password change notification
