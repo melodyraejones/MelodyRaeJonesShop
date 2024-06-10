@@ -33,9 +33,7 @@ function custom_wp_mail($args) {
 
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
-    function wp_new_user_notification($user_id, $notify = 'both') {
-        global $wpdb, $wp_hasher;
-
+    function wp_new_user_notification($user_id, $notify = 'user') {
         // Get user data
         $user = get_userdata($user_id);
         if (!$user) {
@@ -47,10 +45,16 @@ if (!function_exists('wp_new_user_notification')) {
         $user_email = stripslashes($user->user_email);
 
         // Generate password reset key
-        $key = wp_generate_password(20, false);
-        do_action('retrieve_password_key', $user->user_login, $key);
+        $key = get_password_reset_key($user);
+        if (is_wp_error($key)) {
+            return;
+        }
 
-        // Send the password reset link email
+        // Send the password reset link email to the user
+        if ('user' !== $notify) {
+            return;
+        }
+
         $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
@@ -58,11 +62,8 @@ if (!function_exists('wp_new_user_notification')) {
         // Email headers
         $headers = array('Content-Type: text/plain; charset=UTF-8');
 
-        // Log email details for debugging
-        error_log("Sending new user notification to: $user_email");
-
         // Use wp_mail to send the email
-        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
+        $sent = wp_mail($user_email, sprintf(__('[%s] Your Username and Password Info'), get_option('blogname')), $message, $headers);
 
         if ($sent) {
             error_log("New user notification email sent to: $user_email");
@@ -73,7 +74,8 @@ if (!function_exists('wp_new_user_notification')) {
 }
 
 // Hook into user registration
-add_action('user_register', 'wp_new_user_notification');
+add_action('user_register', 'wp_new_user_notification', 10, 2);
+
 
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
