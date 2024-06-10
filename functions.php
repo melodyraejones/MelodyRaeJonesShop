@@ -19,7 +19,7 @@ function custom_wp_mail($args) {
     // Set default headers if not present
     if (empty($args['headers'])) {
         $args['headers'] = array(
-            'From: Your Name <your-email@example.com>',
+            'From: Your Name <melody@melodyraejones.com>',
             'Content-Type: text/html; charset=UTF-8'
         );
     }
@@ -198,7 +198,9 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
     $title = sanitize_text_field($params['title']);
     $price = floatval($params['price']);
     $productId = sanitize_text_field($params['productId']);
+    $relatedPrograms = isset($params['relatedPrograms']) ? maybe_serialize($params['relatedPrograms']) : ''; // Serialize related programs
     $userId = get_current_user_id();
+
     $existing_cart_items = get_posts([
         'post_type' => 'cart',
         'meta_query' => [
@@ -213,6 +215,8 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
 
     if (count($existing_cart_items) > 0) {
         $cart_post_id = $existing_cart_items[0]->ID;
+        $quantity = get_post_meta($cart_post_id, 'program_quantity', true) + 1;
+        update_post_meta($cart_post_id, 'program_quantity', $quantity);
     } else {
         $cart_post_id = wp_insert_post([
             'post_title' => $title,
@@ -221,7 +225,6 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
         ]);
 
         if ($cart_post_id === 0 || is_wp_error($cart_post_id)) {
-            // Handle the error appropriately
             return new WP_REST_Response([
                 'success' => false,
                 'error' => 'Failed to create cart item.'
@@ -232,6 +235,7 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
         update_post_meta($cart_post_id, 'program_quantity', 1);
         update_post_meta($cart_post_id, 'product_id', $productId);
         update_post_meta($cart_post_id, 'user_id', $userId);
+        update_post_meta($cart_post_id, 'related_programs', $relatedPrograms); // Store serialized related programs
     }
 
     return new WP_REST_Response([
@@ -245,16 +249,29 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
 
 
 
+add_action('rest_api_init', function () {
+    register_rest_route('wp/v2', '/cart', [
+        'methods' => 'POST',
+        'callback' => 'handle_add_to_cart_request',
+        'permission_callback' => function () {
+            return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
+        }
+    ]);
+});
+
+
+
+
+
+
 
 
 function my_register_cart_meta() {
     register_rest_field('cart', 'program_price', [
         'get_callback' => function ($object) {
-            // Return the post meta
             return get_post_meta($object['id'], 'program_price', true);
         },
         'update_callback' => function ($value, $object) {
-            // Update the post meta
             return update_post_meta($object->ID, 'program_price', $value);
         },
         'schema' => null,
@@ -262,15 +279,14 @@ function my_register_cart_meta() {
 
     register_rest_field('cart', 'program_quantity', [
         'get_callback' => function ($object) {
-            // Return the post meta
             return get_post_meta($object['id'], 'program_quantity', true);
         },
         'update_callback' => function ($value, $object) {
-            // Update the post meta
             return update_post_meta($object->ID, 'program_quantity', $value);
         },
         'schema' => null,
     ]);
+
     register_rest_field('cart', 'product_id', [
         'get_callback' => function ($object) {
             return get_post_meta($object['id'], 'product_id', true);
@@ -282,27 +298,28 @@ function my_register_cart_meta() {
         },
         'schema' => null,
     ]);
+
     register_rest_field('cart', 'user_id', [
         'get_callback' => function ($object) {
-            // Return the post meta that contains the user ID
             return get_post_meta($object['id'], 'user_id', true);
         },
-        'update_callback' => null, // Assuming you don't want this to be updatable via REST
-        'schema' => null, // Define the schema if needed
+        'update_callback' => null,
+        'schema' => null,
     ]);
-      // Register user_login (username) in the REST field
-      register_rest_field('cart', 'username', [
+
+    // Register related programs field
+    register_rest_field('cart', 'related_programs', [
         'get_callback' => function ($object) {
-            $user_id = get_post_meta($object['id'], 'user_id', true);
-            $user_data = get_userdata($user_id);
-            return $user_data ? $user_data->user_login : null;
+            $related_programs = maybe_unserialize(get_post_meta($object['id'], 'related_programs', true));
+            return $related_programs ? $related_programs : [];
         },
-        'update_callback' => null, // Assuming you don't want this to be updatable via REST
-        'schema' => null, // Define the schema if needed
+        'update_callback' => null,
+        'schema' => null,
     ]);
 }
 
 add_action('rest_api_init', 'my_register_cart_meta');
+
 
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
@@ -483,5 +500,79 @@ return get_bloginfo('name');
 //     ]);
 // }
 // add_action('user_register', 'mrj_on_user_register');
+function mrj_on_user_register($user_id) { 
+    global $wpdb;
+    $user_info = get_userdata($user_id);
+    
+    if (!$user_info) {
+        error_log('Failed to get user data for user ID: ' . $user_id);
+        return;
+    }
 
+    $table_name = $wpdb->prefix . 'user_program_access';
+    error_log('Registering new user with ID: ' . $user_id);
+
+    $programs = get_posts([
+        'post_type' => 'program',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'fields' => 'ids'  // Only get the IDs to reduce memory usage
+    ]);
+
+    if (empty($programs)) {
+        error_log('No programs found to register for user.');
+        return;
+    }
+
+    foreach ($programs as $program_id) {
+        $program = get_post($program_id);  // Get the program post object
+        error_log('Inserting program: ' . $program->post_title); 
+
+        // Check if the program already has a row for this user
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
+            $user_id,
+            $program->post_title
+        ));
+
+        // Only insert if it does not exist
+        if (!$exists) {
+            $result = $wpdb->insert($table_name, [
+                'user_id' => $user_id,
+                'program_id' => $program_id, 
+                'user_email' => $user_info->user_email,
+                'program_name' => $program->post_title,
+                'access_granted' => 0,
+                'created_at' => current_time('mysql', 1)
+            ]);
+
+            if ($result === false) {
+                error_log('Failed to insert program access for user. Error: ' . $wpdb->last_error);
+            } else {
+                error_log('Program access for user ' . $user_id . ' to program ' . $program->post_title . ' added.');
+            }
+        }
+    }
+}
+
+// add_action('user_register', 'mrj_on_user_register');
+
+
+// Hook into user account deletion and clean up custom data
+function mrj_on_user_delete($user_id) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'user_program_access';
+
+    // Delete the records where the user ID matches the ID of the user being deleted
+    $result = $wpdb->delete($table_name, ['user_id' => $user_id]);
+
+    if (false === $result) {
+        error_log("Failed to delete user program access records for user ID: $user_id");
+    } else {
+        error_log("Deleted user program access records for user ID: $user_id");
+    }
+}
+
+// Add the hook into WordPress
+add_action('delete_user', 'mrj_on_user_delete');
 
