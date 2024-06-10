@@ -1,0 +1,137 @@
+/* Program Audios Section Styles */
+.section-program-audios {
+  padding: 7.4rem 0;
+  padding-bottom: 5rem;
+  min-height: 100vh; /* Ensure section takes full viewport height */
+  position: relative;
+  overflow: hidden;
+  background: #1e293b;
+}
+
+.container {
+  max-width: 130rem;
+  margin: 0 auto;
+  align-items: center;
+  gap: 3.2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.audio-heading {
+  color: #6a9c07;
+}
+
+.program-img {
+  width: 70%;
+  margin-bottom: 2rem;
+}
+
+.card-content {
+  font-size: 2rem;
+  line-height: 1.5;
+  margin-bottom: 3.2rem;
+  text-align: center;
+}
+
+.audio-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.audio-link {
+  font-size: 1.4rem;
+  margin-bottom: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #6a9c07;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.audio-link:hover {
+  background-color: #5a8c07;
+}
+
+.no-access-audios {
+  font-size: 3.4rem;
+  margin-top: 7.8rem;
+  height: 10vh;
+  text-align: center;
+  color: white;
+}
+
+.btn-no-program {
+  width: auto;
+  margin-bottom: 10rem;
+  display: block;
+  margin: 0 auto;
+}
+
+.no-program-access {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  text-align: center;
+  color: white;
+}
+
+/* Responsive Styles */
+@media (max-width: 73em) {
+  .section-program-audios .container {
+    gap: 6rem;
+  }
+}
+@media (max-width: 59em) {
+  p.audio-title {
+    font-size: 2rem;
+    margin-bottom: 2.2rem;
+  }
+}
+@media (max-width: 51em) {
+  .audio-heading {
+    font-size: 3rem;
+  }
+  .section-program-audios .container {
+    grid-template-columns: repeat(2, 2fr);
+  }
+}
+@media (max-width: 44em) {
+  p.audio-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+  }
+  div.card-content {
+    padding: 2.8rem 1.8rem 1.8rem 2.8rem;
+  }
+  .audio-heading {
+    font-size: 3.2rem;
+  }
+}
+@media (max-width: 37.5em) {
+  .section-program-audios .container {
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 70%;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  h2.audio-heading {
+    font-size: 2.8rem;
+  }
+  .section-program-audios .container .audio-sub {
+    font-size: 3rem;
+  }
+}
+@media (max-width: 29em) {
+  .section-program-audios .container {
+    max-width: 80%;
+  }
+  h2.audio-heading {
+    font-size: 2.4rem;
+  }
+  .section-program-audios .container .audio-sub {
+    font-size: 2rem;
+  }
+}

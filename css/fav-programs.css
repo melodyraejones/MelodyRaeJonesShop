@@ -1,0 +1,34 @@
+.fav-programs-list {
+  list-style: none;
+  margin: 2rem;
+}
+.fav-programs-list li a {
+  /* text-decoration: none; */
+  text-decoration: dashed;
+  color: inherit;
+  margin-left: 1rem;
+}
+.fav-programs-list li a {
+  color: rgba(31, 30, 30, 0.877);
+}
+
+@media (max-width: 74em) {
+  .fav-programs-list {
+    font-size: 2rem;
+  }
+}
+@media (max-width: 64em) {
+  .fav-programs-list {
+    font-size: 1.8rem;
+  }
+}
+@media (max-width: 44em) {
+  .fav-programs-list {
+    font-size: 1.4rem;
+  }
+}
+@media (max-width: 36em) {
+  .fav-programs-list {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,228 @@
+/*====================================================================
+					Fonts
+=====================================================================*/
+@import url("https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i|Courgette");
+
+@import url("header.css");
+
+@import url("footer.css");
+@import url("shop.css");
+@import url("reusbales.css");
+@import url("program-details.css");
+@import url("pricing-page.css");
+@import url("cart.css");
+@import url("audio.css");
+@import url("all-audios.css");
+@import url("contact.css");
+@import url("fav-programs.css");
+@import url("sent.css");
+@import url("expand-wisdom.css");
+@import url("expand-wisdom-toolkit.css");
+/* @import url("expand-wisdom-toolkit.css"); */
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: "Arimo", sans-serif;
+
+  /* overflow-x: hidden; */
+}
+body {
+  /* define f family here */
+  /* overflow-x: hidden; */
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "AvantGarde Bk BT", Arial, Helvetica, sans-serif;
+  color: #6a9c07; /*#6a9c07;*/
+}
+/* body { */
+/* font-size: 16px; */
+/* line-height: 24px; */
+/* color: #222222; */
+/* font-weight: 400; */
+/* background: #efefef; */
+/* -webkit-font-smoothing: antialiased; */
+/* -moz-font-smoothing: antialiased; */
+/* font-family: "Arimo", sans-serif; */
+/* } */
+
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6 { */
+/* position: relative; */
+/* font-weight: normal; */
+/* line-height: 1.3em; */
+/* margin: 0px 0px 0px 0px; */
+/* background: none; */
+/*font-family: 'Arimo', sans-serif;*/
+/* font-family: "AvantGarde Bk BT", Arial, Helvetica, sans-serif; */
+/* color: #6a9c07; #6a9c07; */
+/* } */
+
+a {
+  cursor: pointer;
+  outline: none;
+  /*color:#6a9c07;*/
+}
+
+a:hover,
+a:focus,
+a:visited {
+  text-decoration: none;
+  outline: none;
+}
+
+/* Login page */
+
+#login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-action-login {
+  background-color: #28133abd;
+}
+.login h1 a {
+  background: url("../images/logo_white.png") no-repeat center center;
+  background-size: cover;
+  width: 35rem;
+  height: 10rem;
+  display: block;
+  max-width: 100%;
+}
+.login form {
+  display: grid;
+  grid-template-columns: 2fr;
+  column-gap: 3.2rem;
+  row-gap: 2.4rem;
+}
+.login form label {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+body.login div#login form#loginform {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Optional: Add a semi-transparent background for the form */
+  padding: 20px;
+  border-radius: 10px;
+}
+body.login-action-register {
+  background-color: #28133abd;
+}
+body.login-action-lostpassword {
+  background-color: #28133abd;
+}
+.login form .input {
+  border: none;
+}
+.login form label {
+  color: #562973;
+}
+.registerform {
+  display: grid;
+  grid-template-columns: 2fr;
+  column-gap: 3.2rem;
+  row-gap: 2.4rem;
+}
+#registerform p input {
+  background-color: #55297359;
+  color: #fff;
+}
+#login form p {
+  color: #562973;
+}
+.login form .input {
+  background-color: #55297359;
+  color: #fff;
+  border: none;
+}
+.wp-core-ui .button.button-large {
+  background-color: #562973;
+  color: #fff;
+  border: none;
+  transition: all 0.3s;
+}
+.wp-core-ui .button.button-large:hover {
+  background-color: #6a9c07;
+}
+
+.dashicons-visibility:before {
+  color: #562973;
+}
+.login #backtoblog a,
+.login #nav a {
+  color: #fff;
+}
+.login #backtoblog a:hover,
+.login #nav a:hover {
+  color: #6a9c07;
+}
+
+.social2 {
+  font-size: 24px;
+  color: #efefef !important; /*#562973   #3a0772;*/
+  font-family: "fontello";
+  margin: 0;
+  padding: 0;
+}
+
+.social2 a {
+  font-size: 30px;
+  color: #efefef !important;
+  font-family: "fontello";
+  text-decoration: none;
+  margin-right: 15px;
+  box-shadow: 1px 1px 5px #555;
+}
+
+.social2 a:hover {
+  color: #6a9c07 !important; /*#7b6d86!important;*/
+  opacity: 0.7;
+}
+
+section.program-details,
+.program-details .product,
+.product .product-image-box,
+.product .product-details-box {
+  border: none;
+}
+
+.product-image-box img {
+  border: none;
+  outline: none;
+}
+
+.product-details-box {
+  border: none;
+}
+
+section.program-details {
+  border-bottom: none;
+}
+
+@media (max-width: 75em) {
+  html {
+    font-size: 56.25%;
+  }
+}

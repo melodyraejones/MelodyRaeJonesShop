@@ -1,0 +1,120 @@
+/* Cart Page Styles */
+.cart-heading {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 3rem;
+}
+
+.cart-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 2rem;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.item-details {
+  flex-grow: 1;
+}
+
+.product-name {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cart-item p {
+  font-size: 1.6rem;
+  margin: 0.2rem 0;
+}
+
+.item-delete {
+  flex-shrink: 0;
+  margin-left: 2rem;
+}
+
+.delete-item {
+  font-size: 1.6rem;
+  color: #d9534f;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.delete-item i {
+  margin-right: 0.5rem;
+}
+
+.delete-item:hover {
+  color: #c9302c;
+}
+
+.cart-checkout {
+  padding: 1rem 0;
+  border-top: 1px solid #ddd;
+}
+
+.cart-total {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.checkout-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pay-button,
+.continue-shopping-button {
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  width: 48%; /* Same width for both buttons */
+  text-align: center;
+}
+
+.pay-button {
+  background-color: #007bff; /* Example background color */
+  color: white; /* Text color */
+}
+
+.continue-shopping-button {
+  background-color: #6c757d; /* Example background color */
+  color: white; /* Text color */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Make it behave like a button */
+}
+
+.pay-button:hover {
+  background-color: #0056b3;
+}
+
+.continue-shopping-button:hover {
+  background-color: #5a6268;
+}
+.product-amount {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+.bin-icon {
+  margin-right: 1rem;
+}

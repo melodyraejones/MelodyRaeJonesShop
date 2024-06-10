@@ -1,0 +1,65 @@
+.section-program-audios {
+  padding: 9.6rem 0;
+}
+.audio-sub {
+  font-size: 3.2rem;
+}
+.audio-heading {
+  font-size: 3.8rem;
+  margin-bottom: 2.4rem;
+}
+.audio-title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-bottom: 3.2rem;
+  text-align: center;
+  height: 10rem;
+}
+.program-img {
+  width: 100%;
+}
+.audio-file {
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+  border-radius: 11px;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.audio-file:hover {
+  transform: translateY(-1.2rem);
+  box-shadow: 0 3.2rem 6.4rem rgba(0, 0, 0, 0.06);
+}
+.card-content {
+  padding: 3.2rem 4.8rem 4.8rem 4.8rem;
+}
+.audio-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.audio-link:link,
+.audio-link:visited {
+  background-color: #643482;
+  color: #fff;
+  padding: 1.2rem 1.6rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.audio-link:hover,
+.audio-link:active {
+  background-color: #6a9c07;
+}
+.center-text {
+  text-align: center;
+}
+
+.btn-explore {
+  width: 50%;
+}
+hr {
+  border: none;
+  height: 2px;
+  background-color: #333;
+  width: 100%;
+  margin: 20px auto;
+}
