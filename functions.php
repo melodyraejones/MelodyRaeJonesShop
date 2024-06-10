@@ -33,7 +33,9 @@ function custom_wp_mail($args) {
 
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
-    function wp_new_user_notification($user_id, $notify = 'user') {
+    function wp_new_user_notification($user_id, $notify = 'both') {
+        global $wpdb, $wp_hasher;
+
         // Get user data
         $user = get_userdata($user_id);
         if (!$user) {
@@ -45,16 +47,10 @@ if (!function_exists('wp_new_user_notification')) {
         $user_email = stripslashes($user->user_email);
 
         // Generate password reset key
-        $key = get_password_reset_key($user);
-        if (is_wp_error($key)) {
-            return;
-        }
+        $key = wp_generate_password(20, false);
+        do_action('retrieve_password_key', $user->user_login, $key);
 
-        // Send the password reset link email to the user
-        if ('user' !== $notify) {
-            return;
-        }
-
+        // Send the password reset link email
         $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
@@ -62,8 +58,11 @@ if (!function_exists('wp_new_user_notification')) {
         // Email headers
         $headers = array('Content-Type: text/plain; charset=UTF-8');
 
+        // Log email details for debugging
+        error_log("Sending new user notification to: $user_email");
+
         // Use wp_mail to send the email
-        $sent = wp_mail($user_email, sprintf(__('[%s] Your Username and Password Info'), get_option('blogname')), $message, $headers);
+        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
 
         if ($sent) {
             error_log("New user notification email sent to: $user_email");
@@ -74,8 +73,7 @@ if (!function_exists('wp_new_user_notification')) {
 }
 
 // Hook into user registration
-add_action('user_register', 'wp_new_user_notification', 10, 2);
-
+add_action('user_register', 'wp_new_user_notification');
 
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
@@ -200,9 +198,7 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
     $title = sanitize_text_field($params['title']);
     $price = floatval($params['price']);
     $productId = sanitize_text_field($params['productId']);
-    $relatedPrograms = isset($params['relatedPrograms']) ? maybe_serialize($params['relatedPrograms']) : ''; // Serialize related programs
     $userId = get_current_user_id();
-
     $existing_cart_items = get_posts([
         'post_type' => 'cart',
         'meta_query' => [
@@ -217,8 +213,6 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
 
     if (count($existing_cart_items) > 0) {
         $cart_post_id = $existing_cart_items[0]->ID;
-        $quantity = get_post_meta($cart_post_id, 'program_quantity', true) + 1;
-        update_post_meta($cart_post_id, 'program_quantity', $quantity);
     } else {
         $cart_post_id = wp_insert_post([
             'post_title' => $title,
@@ -227,6 +221,7 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
         ]);
 
         if ($cart_post_id === 0 || is_wp_error($cart_post_id)) {
+            // Handle the error appropriately
             return new WP_REST_Response([
                 'success' => false,
                 'error' => 'Failed to create cart item.'
@@ -237,7 +232,6 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
         update_post_meta($cart_post_id, 'program_quantity', 1);
         update_post_meta($cart_post_id, 'product_id', $productId);
         update_post_meta($cart_post_id, 'user_id', $userId);
-        update_post_meta($cart_post_id, 'related_programs', $relatedPrograms); // Store serialized related programs
     }
 
     return new WP_REST_Response([
@@ -251,29 +245,16 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
 
 
 
-add_action('rest_api_init', function () {
-    register_rest_route('wp/v2', '/cart', [
-        'methods' => 'POST',
-        'callback' => 'handle_add_to_cart_request',
-        'permission_callback' => function () {
-            return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
-        }
-    ]);
-});
-
-
-
-
-
-
 
 
 function my_register_cart_meta() {
     register_rest_field('cart', 'program_price', [
         'get_callback' => function ($object) {
+            // Return the post meta
             return get_post_meta($object['id'], 'program_price', true);
         },
         'update_callback' => function ($value, $object) {
+            // Update the post meta
             return update_post_meta($object->ID, 'program_price', $value);
         },
         'schema' => null,
@@ -281,14 +262,15 @@ function my_register_cart_meta() {
 
     register_rest_field('cart', 'program_quantity', [
         'get_callback' => function ($object) {
+            // Return the post meta
             return get_post_meta($object['id'], 'program_quantity', true);
         },
         'update_callback' => function ($value, $object) {
+            // Update the post meta
             return update_post_meta($object->ID, 'program_quantity', $value);
         },
         'schema' => null,
     ]);
-
     register_rest_field('cart', 'product_id', [
         'get_callback' => function ($object) {
             return get_post_meta($object['id'], 'product_id', true);
@@ -300,28 +282,27 @@ function my_register_cart_meta() {
         },
         'schema' => null,
     ]);
-
     register_rest_field('cart', 'user_id', [
         'get_callback' => function ($object) {
+            // Return the post meta that contains the user ID
             return get_post_meta($object['id'], 'user_id', true);
         },
-        'update_callback' => null,
-        'schema' => null,
+        'update_callback' => null, // Assuming you don't want this to be updatable via REST
+        'schema' => null, // Define the schema if needed
     ]);
-
-    // Register related programs field
-    register_rest_field('cart', 'related_programs', [
+      // Register user_login (username) in the REST field
+      register_rest_field('cart', 'username', [
         'get_callback' => function ($object) {
-            $related_programs = maybe_unserialize(get_post_meta($object['id'], 'related_programs', true));
-            return $related_programs ? $related_programs : [];
+            $user_id = get_post_meta($object['id'], 'user_id', true);
+            $user_data = get_userdata($user_id);
+            return $user_data ? $user_data->user_login : null;
         },
-        'update_callback' => null,
-        'schema' => null,
+        'update_callback' => null, // Assuming you don't want this to be updatable via REST
+        'schema' => null, // Define the schema if needed
     ]);
 }
 
 add_action('rest_api_init', 'my_register_cart_meta');
-
 
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
@@ -502,79 +483,5 @@ return get_bloginfo('name');
 //     ]);
 // }
 // add_action('user_register', 'mrj_on_user_register');
-function mrj_on_user_register($user_id) { 
-    global $wpdb;
-    $user_info = get_userdata($user_id);
-    
-    if (!$user_info) {
-        error_log('Failed to get user data for user ID: ' . $user_id);
-        return;
-    }
 
-    $table_name = $wpdb->prefix . 'user_program_access';
-    error_log('Registering new user with ID: ' . $user_id);
-
-    $programs = get_posts([
-        'post_type' => 'program',
-        'posts_per_page' => -1,
-        'post_status' => 'publish',
-        'fields' => 'ids'  // Only get the IDs to reduce memory usage
-    ]);
-
-    if (empty($programs)) {
-        error_log('No programs found to register for user.');
-        return;
-    }
-
-    foreach ($programs as $program_id) {
-        $program = get_post($program_id);  // Get the program post object
-        error_log('Inserting program: ' . $program->post_title); 
-
-        // Check if the program already has a row for this user
-        $exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
-            $user_id,
-            $program->post_title
-        ));
-
-        // Only insert if it does not exist
-        if (!$exists) {
-            $result = $wpdb->insert($table_name, [
-                'user_id' => $user_id,
-                'program_id' => $program_id, 
-                'user_email' => $user_info->user_email,
-                'program_name' => $program->post_title,
-                'access_granted' => 0,
-                'created_at' => current_time('mysql', 1)
-            ]);
-
-            if ($result === false) {
-                error_log('Failed to insert program access for user. Error: ' . $wpdb->last_error);
-            } else {
-                error_log('Program access for user ' . $user_id . ' to program ' . $program->post_title . ' added.');
-            }
-        }
-    }
-}
-
-// add_action('user_register', 'mrj_on_user_register');
-
-
-// Hook into user account deletion and clean up custom data
-function mrj_on_user_delete($user_id) {
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'user_program_access';
-
-    // Delete the records where the user ID matches the ID of the user being deleted
-    $result = $wpdb->delete($table_name, ['user_id' => $user_id]);
-
-    if (false === $result) {
-        error_log("Failed to delete user program access records for user ID: $user_id");
-    } else {
-        error_log("Deleted user program access records for user ID: $user_id");
-    }
-}
-
-// Add the hook into WordPress
-add_action('delete_user', 'mrj_on_user_delete');
 
