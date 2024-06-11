@@ -4,7 +4,6 @@
 @import url("https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i|Courgette");
 
 @import url("header.css");
-
 @import url("footer.css");
 @import url("shop.css");
 @import url("reusbales.css");
@@ -18,7 +17,6 @@
 @import url("sent.css");
 @import url("expand-wisdom.css");
 @import url("expand-wisdom-toolkit.css");
-/* @import url("expand-wisdom-toolkit.css"); */
 
 * {
   margin: 0px;

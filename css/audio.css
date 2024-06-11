@@ -77,6 +77,167 @@
   text-align: center;
   color: white;
 }
+/* .container {
+  
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+} */
+
+.section-audios {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #1e293b; /* Dark blue background */
+  background-image:
+    url("path_to_your_moon_image.jpg"),
+    /* Moon image */
+      radial-gradient(
+        circle,
+        transparent 20%,
+        #1e293b 20%,
+        #1e293b 80%,
+        transparent 80%,
+        transparent
+      ),
+    radial-gradient(
+        circle,
+        transparent 20%,
+        #1e293b 20%,
+        #1e293b 80%,
+        transparent 80%,
+        transparent
+      )
+      #1e293b;
+  background-size:
+    cover,
+    10px 10px,
+    10px 10px; /* Adjust the size of the moon image to cover, and small circles for stars */
+  background-position:
+    center,
+    0 0,
+    5px 5px;
+  position: relative; /* Ensures the background spans the full area of the element */
+}
+
+.audio-content {
+  width: 100%;
+  max-width: 130rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Make sure content is on top of the background */
+  z-index: 1; /* Higher index to ensure content is above the background */
+}
+
+.music-player {
+  background-color: rgba(
+    255,
+    224,
+    229,
+    0.9
+  ); /* Slightly transparent to see the background */
+  width: 40rem;
+  padding: 2.5rem 3.5rem;
+  text-align: center;
+  margin: auto;
+  border-radius: 8px; /* Optional: rounded corners for the player */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+nav .circle {
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  line-height: 4rem;
+  background-color: #fff;
+  color: #f53192;
+  box-shadow: 0 5px 10px rgba(255, 26, 26, 0.22);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.audio-image {
+  width: 22rem;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 10px 60px rgba(255, 26, 26, 0.22);
+}
+.music-player h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-top: 2rem;
+}
+.music-player p {
+  font-size: 1.4rem;
+}
+
+#progress {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 0.6rem;
+  background-color: #f53192;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  margin: 4rem 0;
+}
+
+#progress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #f53192;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 8px solid #fff;
+  box-shadow: 0 5px 5px rgba(255, 26, 26, 0.22);
+}
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.controls div {
+  width: 6rem;
+  height: 6rem;
+  margin: 2rem;
+  background-color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #f53192;
+  box-shadow: 0 5px 5px rgba(255, 26, 26, 0.22);
+  cursor: pointer;
+}
+.controls div:nth-child(2) {
+  transform: scale(1.5);
+  background-color: #f53192;
+  color: #fff;
+}
+.no-access-audios {
+  font-size: 3.4rem;
+  margin-top: 7.8rem;
+  height: 10vh;
+}
+.btn-no-program {
+  width: auto;
+  margin-bottom: 10rem;
+}
+.no-program-access {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
 
 /* Responsive Styles */
 @media (max-width: 73em) {
