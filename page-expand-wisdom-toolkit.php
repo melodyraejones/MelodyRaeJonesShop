@@ -27,6 +27,11 @@ $product_price = get_field('program_price', $page_id);
             <span class="cart-badge">0</span>
         </a>
     </div>
+    <div class="back-button">
+                <a href="<?php echo esc_url(home_url('/')); ?>">
+                    <i class="fas fa-arrow-left"></i> Back to Homepage
+                </a>
+            </div>
     <div class="product grid grid--2-cols">
         <div class="product-image-box product-image-box-wisdom">
             <?php if ($featured_image_url) : ?>

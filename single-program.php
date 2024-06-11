@@ -15,6 +15,11 @@ $product_id = get_the_ID();
             <span class="cart-badge">0</span>
         </a>
     </div>
+    <div class="back-button">
+                <a href="<?php echo esc_url(home_url('/')); ?>">
+                    <i class="fas fa-arrow-left"></i> Back to Homepage
+                </a>
+            </div>
     <div class="product grid grid--2-cols" data-id="<?php echo get_the_ID(); ?>">
         <div class="product-image-box">
             <img class="product-img" src="<?php echo esc_url($product_image_url); ?>" alt="<?php the_title_attribute(); ?>">
@@ -30,7 +35,7 @@ $product_id = get_the_ID();
             <div class="product-description">
                 <?php the_content(); ?>
             </div>
-            <a href="#" class="btn btn--full btn-details btn-buy" data-id="<?php echo get_the_ID(); ?>" data-price="<?php echo $product_price; ?>">Buy Now</a>
+           
             <a href="#" class="btn btn--full btn-details add_to_cart_details" data-id="<?php echo get_the_ID(); ?>" data-price="<?php echo $product_price; ?>">Add to Cart</a>
         </div>
     </div>

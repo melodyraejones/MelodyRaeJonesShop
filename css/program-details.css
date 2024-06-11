@@ -10,7 +10,9 @@
   margin: 0 auto;
   gap: 1.2rem;
 }
-
+.add_to_cart_details {
+  font-size: 2rem;
+}
 .heading-primary {
   color: #6a9c07;
 }
@@ -51,6 +53,7 @@
   align-items: center;
   margin-bottom: 2rem;
   font-weight: bold;
+  font-size: 2rem;
 }
 
 .original-price {
