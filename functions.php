@@ -10,76 +10,12 @@ function get_cart_url() {
     }
 }
 
+
+
+
 // Custom wp_mail function for logging
-if (!function_exists('custom_wp_mail')) {
-    function custom_wp_mail($args) {
-        // Set default headers if not present
-        if (empty($args['headers'])) {
-            $args['headers'] = array(
-                'From: Your Name <melody@melodyraejones.com>',
-                'Content-Type: text/html; charset=UTF-8'
-            );
-        }
 
-        // Log email arguments for debugging
-        error_log(print_r($args, true));
 
-        // Return modified arguments
-        return $args;
-    }
-}
-add_filter('wp_mail', 'custom_wp_mail');
-
-// Custom new user notification function
-if (!function_exists('wp_new_user_notification')) {
-    function wp_new_user_notification($user_id, $notify = 'both') {
-        global $wpdb, $wp_hasher;
-
-        // Get user data
-        $user = get_userdata($user_id);
-        if (!$user) {
-            error_log("Failed to get user data for user ID: $user_id");
-            return;
-        }
-
-        $user_login = stripslashes($user->user_login);
-        $user_email = stripslashes($user->user_email);
-
-        // Generate password reset key
-        $key = wp_generate_password(20, false);
-        do_action('retrieve_password_key', $user->user_login, $key);
-
-        // Send the password reset link email
-        $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-        $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
-        $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
-
-        // Email headers
-        $headers = array('Content-Type: text/plain; charset=UTF-8');
-
-        // Log email details for debugging
-        error_log("Sending new user notification to: $user_email");
-
-        // Use wp_mail to send the email
-        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
-
-        if ($sent) {
-            error_log("New user notification email sent to: $user_email");
-        } else {
-            error_log("Failed to send new user notification email to: $user_email");
-        }
-    }
-}
-
-// Hook into user registration
-add_action('user_register', 'wp_new_user_notification');
-
-// Disable default password change notification
-if (!function_exists('wp_password_change_notification')) {
-    function wp_password_change_notification($user) {
-        return; // Disable the default notification for password change
-    }
-}
 
 //direct checkout route:
 
@@ -122,6 +58,8 @@ add_action('rest_api_init', function() {
     ]);
 });
 
+
+
 function handle_custom_contact_form_submission() {
     if (isset($_POST['contact_form_nonce']) && wp_verify_nonce($_POST['contact_form_nonce'], 'custom_contact_form_action')) {
         $name = sanitize_text_field($_POST['full-name']);
@@ -145,6 +83,7 @@ function handle_custom_contact_form_submission() {
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
             $mail->send();
            
+
             wp_redirect(home_url('/sent'));
             exit;
         } catch (Exception $e) {
@@ -159,10 +98,14 @@ function handle_custom_contact_form_submission() {
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
 
+
+//
+
 function enqueue_dashicons_front_end() {
     wp_enqueue_style('dashicons');
 }
 add_action('wp_enqueue_scripts', 'enqueue_dashicons_front_end');
+
 
 function modify_audio_query($query) {
     // Check if it's the correct query to modify
@@ -174,9 +117,13 @@ function modify_audio_query($query) {
 
 add_action('pre_get_posts', 'modify_audio_query');
 
+
+
 //cart-total-route
 require get_theme_file_path('/inc/cart-total-route.php');
 require get_theme_file_path('/inc/checkout-route.php');
+
+
 
 function handle_add_to_cart_request(WP_REST_Request $request) {
     $params = $request->get_params();
@@ -231,6 +178,9 @@ function handle_add_to_cart_request(WP_REST_Request $request) {
     ], 200);
 }
 
+
+
+
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
         'methods' => 'POST',
@@ -240,6 +190,13 @@ add_action('rest_api_init', function () {
         }
     ]);
 });
+
+
+
+
+
+
+
 
 function my_register_cart_meta() {
     register_rest_field('cart', 'program_price', [
@@ -295,13 +252,15 @@ function my_register_cart_meta() {
 
 add_action('rest_api_init', 'my_register_cart_meta');
 
+
 add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/cart', [
         'methods' => 'POST',
         'callback' => 'handle_add_to_cart_request',
-        'permission_callback' => function () {
-            return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
-        }
+      'permission_callback' => function () {
+    return is_user_logged_in() && (current_user_can('manage_options') || current_user_can('edit_posts'));
+}
+
     ]);
 });
 
@@ -348,12 +307,19 @@ add_filter('rest_cart_query', function ($args, $request) {
     return $args;
 }, 10, 2);
 
+
+
 add_filter('the_title', function($title, $id = null) {
     if (get_post_type($id) == 'cart') {
         return preg_replace('/^Private:\s*/', '', $title);
     }
     return $title;
 }, 10, 2);
+
+// First, use the correct path to include the Composer autoloader.
+// The __DIR__ constant ensures you get the directory of the current file.
+// Adjust the path if your 'vendor' directory is elsewhere.
+// require_once(__DIR__ . '/vendor/autoload.php');
 
 function mrj_files() {
     // Enqueue a CSS file
@@ -367,6 +333,8 @@ function mrj_files() {
 }
 
 add_action('wp_enqueue_scripts', 'mrj_files');
+
+
 
 function mrj_features() {
     add_theme_support('title-tag');
@@ -396,24 +364,26 @@ function mrj_enqueue_scripts() {
 
 add_action('wp_enqueue_scripts', 'mrj_enqueue_scripts');
 
+
+
 //redirect subscriber account out of admin to the homepage
 add_action('admin_init','redirectSubsToFrontend');
 
 function redirectSubsToFrontend(){
-    $currentUser = wp_get_current_user();
+$currentUser = wp_get_current_user();
     if(count($currentUser -> roles) == 1 AND $currentUser-> roles[0] == 'subscriber' ){
             wp_redirect(site_url('/'));
             exit;
-    }
+}
 }
 //hide dashboard for users
 add_action('wp_loaded','noSubsAdminBar');
 
 function noSubsAdminBar(){
-    $currentUser = wp_get_current_user();
+$currentUser = wp_get_current_user();
     if(count($currentUser -> roles) == 1 AND $currentUser-> roles[0] == 'subscriber' ){
            show_admin_bar(false);
-    }
+}
 }
 //Customize login screen
 add_filter('login_headerurl','headerUrl');
@@ -429,10 +399,39 @@ function loginCSS(){
 add_filter('login_headertitle', 'loginTitle');
 
 function loginTitle(){
-    return get_bloginfo('name');
+return get_bloginfo('name');
 }
 
 //user program access
+// function mrj_on_user_register($user_id) {
+//     global $wpdb;
+//     $user_info = get_userdata($user_id);
+//     $table_name = $wpdb->prefix . 'user_program_access';
+
+//     // Fetch all programs
+//     $programs = get_posts([
+//         'post_type' => 'program',
+//         'posts_per_page' => -1
+//     ]);
+
+//     // Prepare the programs access data
+//     $programs_access = [];
+//     foreach ($programs as $program) {
+//         $programs_access[] = [
+//             'program_id' => $program->ID,
+//             'program_name' => $program->post_title,
+//             'access' => false  // Default to no access
+//         ];
+//     }
+
+//     // Insert data into custom table
+//     $wpdb->insert($table_name, [
+//         'user_id' => $user_id,
+//         'user_email' => $user_info->user_email,
+//         'programs_access' => json_encode($programs_access)  // Store as JSON
+//     ]);
+// }
+// add_action('user_register', 'mrj_on_user_register');
 function mrj_on_user_register($user_id) { 
     global $wpdb;
     $user_info = get_userdata($user_id);
@@ -488,6 +487,9 @@ function mrj_on_user_register($user_id) {
     }
 }
 
+// add_action('user_register', 'mrj_on_user_register');
+
+
 // Hook into user account deletion and clean up custom data
 function mrj_on_user_delete($user_id) {
     global $wpdb;
@@ -505,3 +507,4 @@ function mrj_on_user_delete($user_id) {
 
 // Add the hook into WordPress
 add_action('delete_user', 'mrj_on_user_delete');
+
