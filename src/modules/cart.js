@@ -345,7 +345,6 @@ class MyCart {
       );
 
       if (response.data) {
-        console.log("Total updated successfully:", response.data);
         // You can now use response.data.cartTotal, response.data.items, etc.
       } else {
         console.error("Failed to update total: No data received");
