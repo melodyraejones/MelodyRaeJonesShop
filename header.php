@@ -46,7 +46,9 @@
                        
                         <div class="navbar-collapse collapse clearfix">
                             <ul class="navigation clearfix">
-                                <li class="current"><a href="index.html">Home</a>
+                                <li><a href="index.html">Home</a>
+                                <li>
+                                <li class="current"><a href="index.html">Shop</a>
                                 <li>
                                 <li class="dropdown"><a href="melody.html">About</a>
                                     <ul>

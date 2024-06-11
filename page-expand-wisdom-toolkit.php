@@ -28,14 +28,17 @@ $product_price = get_field('program_price', $page_id);
         </a>
     </div>
     <div class="product grid grid--2-cols">
-        <div class="product-image-box product-image-box-wisdom ">
+        <div class="product-image-box product-image-box-wisdom">
             <?php if ($featured_image_url) : ?>
                 <img class="product-img" src="<?php echo esc_url($featured_image_url); ?>" alt="<?php echo esc_attr($page->post_title); ?>">
             <?php else : ?>
                 <img class="product-img" src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="Expand Your Wisdom Toolkit">
             <?php endif; ?>
             <?php if ($product_price) : ?>
-                <p class="product-price wisdom-program-price">Price: $<?php echo esc_html(number_format((float)$product_price, 2)); ?></p> 
+                <div class="price-container">
+                    <span class="price-icon">$</span>
+                    <p class="wisdom-program-price"><?php echo esc_html(number_format((float)$product_price, 2)); ?></p>
+                </div>
             <?php endif; ?>
         </div>
         <div class="product-details-box">
