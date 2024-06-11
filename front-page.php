@@ -91,7 +91,7 @@ get_header();
                         <div class="program-content">
                             <p class="program-title"><?php the_title(); ?></p>
                           
-                            <p class="program-price">$<?php echo esc_html(number_format((float)$program_price, 2, '.', '')); ?></p>
+                            <p class="program-price">Price: $<?php echo esc_html(number_format((float)$program_price, 2, '.', '')); ?></p>
 
                             <div class="button-container">
                         

@@ -321,7 +321,9 @@ h3.shop-list + a {
   font-size: 2.8rem;
   text-align: center;
 }
-
+.product-amount {
+  font-size: 2rem;
+}
 /*Styles for My Programs Link */
 
 .my-programs-access {
