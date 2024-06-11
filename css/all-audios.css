@@ -3,6 +3,7 @@
 }
 .audio-sub {
   font-size: 3.2rem;
+  color: #fff;
 }
 .audio-heading {
   font-size: 3.8rem;
@@ -15,6 +16,7 @@
   text-align: center;
   height: 10rem;
 }
+
 .program-img {
   width: 100%;
 }
@@ -30,6 +32,7 @@
 }
 .card-content {
   padding: 3.2rem 4.8rem 4.8rem 4.8rem;
+  background-color: #ffffffa3;
 }
 .audio-btn {
   display: flex;
