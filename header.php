@@ -46,9 +46,9 @@
                        
                         <div class="navbar-collapse collapse clearfix">
                             <ul class="navigation clearfix">
-                                <li><a href="index.html">Home</a>
+                                <li><a href="https://melodyraejones.com/">Home</a>
                                 <li>
-                                <li class="current"><a href="index.html">Shop</a>
+                                <li class="current"><a href="https://melodyraejones.com/shop">Shop</a>
                                 <li>
                                 <li class="dropdown"><a href="melody.html">About</a>
                                     <ul>
