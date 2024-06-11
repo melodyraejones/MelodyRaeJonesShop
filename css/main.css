@@ -35,7 +35,7 @@ html {
 }
 body {
   /* define f family here */
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
 }
 h1,
 h2,
