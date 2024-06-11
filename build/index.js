@@ -191,6 +191,7 @@ class MyCart {
     const productId = button.getAttribute("data-id");
     const relatedPrograms = button.getAttribute("data-related-programs") ? JSON.parse(button.getAttribute("data-related-programs")) : [];
     const quantity = 1;
+    console.log(productId);
     const existingItemIndex = this.cartItems.findIndex(item => item.productId == productId);
     if (existingItemIndex > -1) {
       this.cartItems[existingItemIndex].quantity += quantity;
@@ -404,6 +405,7 @@ class MyCart {
         }
       });
       if (response.data) {
+        console.log("Total updated successfully:", response.data);
         // You can now use response.data.cartTotal, response.data.items, etc.
       } else {
         console.error("Failed to update total: No data received");
