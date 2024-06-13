@@ -8,6 +8,11 @@ $webhookSecretKey = defined('STRIPE_WEBHOOK_SECRET') ? STRIPE_WEBHOOK_SECRET : '
 // Set the Stripe API key
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
+// Normalize product names by replacing non-breaking spaces with regular spaces
+function normalize_product_name($name) {
+    return str_replace("\u{00A0}", ' ', html_entity_decode(trim($name), ENT_QUOTES, 'UTF-8'));
+}
+
 // Function to create a Stripe Checkout Session
 function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
     $user_id = get_current_user_id();
@@ -17,12 +22,8 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
     }
 
     $validated_data = $request->get_json_params();
-    
-    // Log the entire request payload
-    error_log('Received request payload: ' . print_r($validated_data, true));
-
     $product_names = array_map(function($item) {
-        return $item['name'];
+        return normalize_product_name($item['name']);
     }, $validated_data['items']);
 
     $line_items = array_map(function($item) {
@@ -39,8 +40,8 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
     // Ensure relatedPrograms exists in metadata
     $related_programs = isset($validated_data['relatedPrograms']) ? $validated_data['relatedPrograms'] : [];
 
-    // Log relatedPrograms data
-    error_log('Creating Stripe session. Related Programs: ' . print_r($related_programs, true));
+    // Check if the user is purchasing the "Expand Your Wisdom Toolkit"
+    $is_wisdom_toolkit_purchased = in_array('The Expand Your Wisdom Toolkit', $product_names);
 
     try {
         $session = \Stripe\Checkout\Session::create([
@@ -54,7 +55,8 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
                 'username' => $user_info->user_login,
                 'email' => $user_info->user_email,
                 'product_names' => json_encode($product_names),
-                'related_programs' => json_encode($related_programs)  // Correctly include related programs
+                'related_programs' => json_encode($related_programs),
+                'is_wisdom_toolkit_purchased' => $is_wisdom_toolkit_purchased ? 'true' : 'false'
             ]
         ]);
         return new WP_REST_Response(['url' => $session->url], 200);
@@ -62,8 +64,6 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
         return new WP_REST_Response(['error' => $e->getMessage()], 500);
     }
 }
-
-
 
 // Register the /checkout route
 add_action('rest_api_init', function () {
@@ -83,6 +83,7 @@ add_action('rest_api_init', function () {
     ));
 });
 
+// Function to handle Stripe webhooks
 function mrj_handle_stripe_webhook() {
     global $webhookSecretKey;
 
@@ -92,63 +93,61 @@ function mrj_handle_stripe_webhook() {
     try {
         $event = \Stripe\Webhook::constructEvent($payload, $sig_header, $webhookSecretKey);
     } catch (\UnexpectedValueException $e) {
+   
         http_response_code(400);
         exit();
     } catch (\Stripe\Exception\SignatureVerificationException $e) {
+       
         http_response_code(400);
         exit();
     }
 
     if ($event->type == 'checkout.session.completed') {
         $session = $event->data->object;
+      
+
         $user_id = $session->metadata->user_id;
         $product_names = json_decode($session->metadata->product_names);
         $user_email = $session->metadata->email;
         $related_programs = isset($session->metadata->related_programs) ? json_decode($session->metadata->related_programs, true) : [];
-
-        error_log('Webhook received. User ID: ' . $user_id);
-        error_log('Webhook received. Product Names: ' . print_r($product_names, true));
-        error_log('Webhook received. Raw Related Programs Metadata: ' . $session->metadata->related_programs);
-        error_log('Webhook received. Decoded Related Programs: ' . print_r($related_programs, true));
+        $is_wisdom_toolkit_purchased = isset($session->metadata->is_wisdom_toolkit_purchased) ? $session->metadata->is_wisdom_toolkit_purchased : 'false';
 
         global $wpdb;
         $table_name = $wpdb->prefix . 'user_program_access';
         $toolkit_table = $wpdb->prefix . 'wisdom_toolkit_access';
 
-        // Insert or update access in user_program_access table for purchased product
+        // Insert or update access in user_program_access table for purchased products
         foreach ($product_names as $product_name) {
-            $exists = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
-                $user_id,
+            $program_id = $wpdb->get_var($wpdb->prepare(
+                "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'program'",
                 $product_name
             ));
 
-            if ($exists) {
-                $updated = $wpdb->update(
-                    $table_name,
-                    ['access_granted' => 1],
-                    [
+            if ($program_id) {
+                $exists = $wpdb->get_var($wpdb->prepare(
+                    "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
+                    $user_id,
+                    $product_name
+                ));
+
+                if ($exists) {
+                    $wpdb->update(
+                        $table_name,
+                        ['access_granted' => 1, 'program_id' => $program_id],
+                        [
+                            'user_id' => $user_id,
+                            'program_name' => $product_name
+                        ]
+                    );
+                } else {
+                    $wpdb->insert($table_name, [
                         'user_id' => $user_id,
-                        'program_name' => $product_name
-                    ]
-                );
-                if ($updated === false) {
-                    error_log('Failed to update main product: ' . $wpdb->last_error);
-                } else {
-                    error_log('Updated main product: ' . $product_name);
-                }
-            } else {
-                $inserted = $wpdb->insert($table_name, [
-                    'user_id' => $user_id,
-                    'user_email' => $user_email,
-                    'program_name' => $product_name,
-                    'access_granted' => 1,
-                    'created_at' => current_time('mysql', 1)
-                ]);
-                if ($inserted === false) {
-                    error_log('Failed to insert main product: ' . $wpdb->last_error);
-                } else {
-                    error_log('Inserted main product: ' . $product_name);
+                        'user_email' => $user_email,
+                        'program_name' => $product_name,
+                        'program_id' => $program_id,
+                        'access_granted' => 1,
+                        'created_at' => current_time('mysql', 1)
+                    ]);
                 }
             }
         }
@@ -158,8 +157,6 @@ function mrj_handle_stripe_webhook() {
             $program_name = $program['title'];
             $program_id = $program['id'];
 
-            error_log('Processing related program. Program ID: ' . $program_id . ', Program Name: ' . $program_name);
-
             $exists = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
                 $user_id,
@@ -167,7 +164,7 @@ function mrj_handle_stripe_webhook() {
             ));
 
             if ($exists) {
-                $updated = $wpdb->update(
+                $wpdb->update(
                     $table_name,
                     ['access_granted' => 1, 'program_id' => $program_id],
                     [
@@ -175,13 +172,8 @@ function mrj_handle_stripe_webhook() {
                         'program_name' => $program_name
                     ]
                 );
-                if ($updated === false) {
-                    error_log('Failed to update related program: ' . $wpdb->last_error);
-                } else {
-                    error_log('Updated related program: ' . $program_name);
-                }
             } else {
-                $inserted = $wpdb->insert($table_name, [
+                $wpdb->insert($table_name, [
                     'user_id' => $user_id,
                     'user_email' => $user_email,
                     'program_id' => $program_id,
@@ -189,94 +181,22 @@ function mrj_handle_stripe_webhook() {
                     'access_granted' => 1,
                     'created_at' => current_time('mysql', 1)
                 ]);
-                if ($inserted === false) {
-                    error_log('Failed to insert related program: ' . $wpdb->last_error);
-                } else {
-                    error_log('Inserted related program: ' . $program_name);
-                }
             }
         }
 
-        // Grant access to the Wisdom Toolkit
-        $wisdom_toolkit_exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $toolkit_table WHERE user_id = %d",
-            $user_id
-        ));
-
-        if ($wisdom_toolkit_exists) {
-            $updated_toolkit = $wpdb->update(
-                $toolkit_table,
-                ['access_granted' => 1],
-                ['user_id' => $user_id]
-            );
-            if ($updated_toolkit === false) {
-                error_log('Failed to update wisdom toolkit access: ' . $wpdb->last_error);
-            } else {
-                error_log('Updated wisdom toolkit access for user: ' . $user_id);
-            }
-        } else {
-            $inserted_toolkit = $wpdb->insert($toolkit_table, [
-                'user_id' => $user_id,
-                'user_email' => $user_email,
-                'access_granted' => 1,
-                'created_at' => current_time('mysql', 1)
-            ]);
-            if ($inserted_toolkit === false) {
-                error_log('Failed to insert wisdom toolkit access: ' . $wpdb->last_error);
-            } else {
-                error_log('Inserted wisdom toolkit access for user: ' . $user_id);
-            }
+        // Check if Wisdom Toolkit was purchased and handle separately
+        if ($is_wisdom_toolkit_purchased === 'true') {
+            handle_wisdom_toolkit_purchase($user_id, $user_email);
         }
 
-        // Grant access to all modules of the custom post type 'wisdomtoolkitcontent'
-        $modules = get_posts([
-            'post_type' => 'wisdomtoolkitcontent',
-            'posts_per_page' => -1
-        ]);
-
-        foreach ($modules as $module) {
-            $program_name = $module->post_title;
-            $program_id = $module->ID;
-
-            $exists = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d",
-                $user_id,
-                $program_id
-            ));
-
-            if ($exists) {
-                $updated = $wpdb->update(
-                    $table_name,
-                    ['access_granted' => 1],
-                    [
-                        'user_id' => $user_id,
-                        'program_id' => $program_id
-                    ]
-                );
-                if ($updated === false) {
-                    error_log('Failed to update module: ' . $wpdb->last_error);
-                } else {
-                    error_log('Updated module: ' . $program_name);
-                }
+        // Clear the cart items for the user if the table exists
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}cart'") == "{$wpdb->prefix}cart") {
+            if (function_exists('clear_user_cart_items')) {
+                clear_user_cart_items($user_id);
             } else {
-                $inserted = $wpdb->insert($table_name, [
-                    'user_id' => $user_id,
-                    'user_email' => $user_email,
-                    'program_id' => $program_id,
-                    'program_name' => $program_name,
-                    'access_granted' => 1,
-                    'created_at' => current_time('mysql', 1)
-                ]);
-                if ($inserted === false) {
-                    error_log('Failed to insert module: ' . $wpdb->last_error);
-                } else {
-                    error_log('Inserted module: ' . $program_name);
-                }
+                error_log('Function clear_user_cart_items does not exist.');
             }
         }
-
-        // Clear the cart items for the user
-        clear_user_cart_items($user_id);
 
         // Send email for general program access
         $subject = "Access Your Purchased Programs";
@@ -289,11 +209,94 @@ function mrj_handle_stripe_webhook() {
 
         wp_mail($user_email, $subject, $message, $headers);
 
-        error_log('Email sent to: ' . $user_email);
+    
     }
 
     http_response_code(200);
     exit();
 }
-add_action('wp_ajax_nopriv_mrj_handle_stripe_webhook', 'mrj_handle_stripe_webhook');
-add_action('wp_ajax_mrj_handle_stripe_webhook', 'mrj_handle_stripe_webhook');
+
+// Function to handle the purchase of the Wisdom Toolkit
+function handle_wisdom_toolkit_purchase($user_id, $user_email) {
+    global $wpdb;
+    $toolkit_table = $wpdb->prefix . 'wisdom_toolkit_access';
+    $table_name = $wpdb->prefix . 'user_program_access';
+
+    $wisdom_toolkit_exists = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $toolkit_table WHERE user_id = %d",
+        $user_id
+    ));
+
+    if ($wisdom_toolkit_exists) {
+        $updated_toolkit = $wpdb->update(
+            $toolkit_table,
+            ['access_granted' => 1],
+            ['user_id' => $user_id]
+        );
+        if ($updated_toolkit !== false) {
+        
+        } else {
+            error_log('Failed to update Wisdom Toolkit access for user ID: ' . $user_id . ' Error: ' . $wpdb->last_error);
+        }
+    } else {
+        $inserted_toolkit = $wpdb->insert($toolkit_table, [
+            'user_id' => $user_id,
+            'user_email' => $user_email,
+            'access_granted' => 1,
+            'created_at' => current_time('mysql', 1)
+        ]);
+        if ($inserted_toolkit !== false) {
+            error_log('Inserted new Wisdom Toolkit access for user ID: ' . $user_id);
+        } else {
+            error_log('Failed to insert new Wisdom Toolkit access for user ID: ' . $user_id . ' Error: ' . $wpdb->last_error);
+        }
+    }
+
+    // Grant access to all modules of the custom post type 'wisdomtoolkitcontent'
+    $modules = get_posts([
+        'post_type' => 'wisdomtoolkitcontent',
+        'posts_per_page' => -1
+    ]);
+
+    foreach ($modules as $module) {
+        $program_name = $module->post_title;
+        $program_id = $module->ID;
+
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d",
+            $user_id,
+            $program_id
+        ));
+
+        if ($exists) {
+            $wpdb->update(
+                $table_name,
+                ['access_granted' => 1],
+                [
+                    'user_id' => $user_id,
+                    'program_id' => $program_id
+                ]
+            );
+          
+        } else {
+            $wpdb->insert($table_name, [
+                'user_id' => $user_id,
+                'user_email' => $user_email,
+                'program_id' => $program_id,
+                'program_name' => $program_name,
+                'access_granted' => 1,
+                'created_at' => current_time('mysql', 1)
+            ]);
+           
+        }
+    }
+}
+
+// Ensure the function `clear_user_cart_items` is defined only once
+if (!function_exists('clear_user_cart_items')) {
+    function clear_user_cart_items($user_id) {
+        global $wpdb;
+        $wpdb->delete($wpdb->prefix . 'cart', ['user_id' => $user_id]);
+    }
+}
+?>

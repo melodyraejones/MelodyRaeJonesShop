@@ -25,7 +25,7 @@ if (is_user_logged_in()) {
         ));
 
         if ($wisdom_toolkit_posts->have_posts()) {
-            echo '<section class="section-program-audios service-detail-section"><div class="container center-text"><h2 class="wisdom-heading" style="margin-bottom:15px">Welcome!</h2>';
+            echo '<section class="section-program-audios service-detail-section background-toolkit"><div class="container center-text"><h2 class="wisdom-heading" style="margin-bottom:15px">Welcome!</h2>';
             echo '<div class="text" style="padding-bottom:12px">
             <p>Expanding your connection to your intuition is one of the most powerful and foundational things that you can do for yourself. It allows you to re-create yourself each and every day to include intuitively-guided choices and actions that support the highest view for you and your life.<br><br>
             It also provides a strong foundation for making decisions that more closely align with your heart, soul and life purpose, thereby allowing you to increase your personal effectiveness within all areas of your life.<br><br>
