@@ -15,18 +15,17 @@ if (is_user_logged_in()) {
         $current_user_id
     ));
 
-    // Check if "Expand Your Wisdom Toolkit" is purchased
+
+    // Fetch the ID of "The Expand Your Wisdom Toolkit" page
     $wisdom_toolkit_id = $wpdb->get_var($wpdb->prepare(
-        "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'program'",
+        "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
         'The Expand Your Wisdom Toolkit'
     ));
-    
-    // Debugging output
-    error_log('Granted Access Program IDs: ' . print_r($granted_access_program_ids, true));
-    error_log('Wisdom Toolkit ID: ' . print_r($wisdom_toolkit_id, true));
-    error_log('Is Wisdom Toolkit Purchased: ' . (in_array($wisdom_toolkit_id, $granted_access_program_ids) ? 'true' : 'false'));
+
 
     $is_wisdom_toolkit_purchased = in_array($wisdom_toolkit_id, $granted_access_program_ids);
+
+  
 
     if (!empty($granted_access_program_ids)) {
         // Query audio posts that have a related program which the user has access to
@@ -65,8 +64,9 @@ if (is_user_logged_in()) {
 
             // Add the card for "Expand Your Wisdom Toolkit" if purchased
             if ($is_wisdom_toolkit_purchased) {
-                echo "<div class='audio-file'>";
-                echo "<img src='" . get_stylesheet_directory_uri() . "/images/path_to_toolkit_image.jpg' class='program-img' alt='Expand Your Wisdom Toolkit'/>";
+                $toolkit_image_url = get_the_post_thumbnail_url($wisdom_toolkit_id, 'full') ?: get_stylesheet_directory_uri() . '/images/path_to_default_image.jpg';
+                echo "<div class='audio-file wisdom-file'>";
+                echo "<img src='" . esc_url($toolkit_image_url) . "' class='program-img wisdom-img' alt='Expand Your Wisdom Toolkit'/>";
                 echo "<div class='card-content'>";
                 echo "<p class='audio-title'>Expand Your Wisdom Toolkit</p>";
                 echo "<a class='audio-link btn btn--full details' href='" . home_url('/wisdom-toolkit-modules/') . "'>Access Toolkit &rarr;</a>";

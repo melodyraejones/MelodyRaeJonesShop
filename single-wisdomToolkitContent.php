@@ -9,11 +9,20 @@ if (is_user_logged_in()) {
     global $wpdb;
     $current_user_id = get_current_user_id();
 
-    // Fetch the access for Wisdom Toolkit from the custom table
-    $wisdom_toolkit_access_granted = $wpdb->get_var($wpdb->prepare(
-        "SELECT access_granted FROM {$wpdb->prefix}wisdom_toolkit_access WHERE user_id = %d",
+    // Fetch the program IDs that have access granted for the current user from the custom table
+    $granted_access_program_ids = $wpdb->get_col($wpdb->prepare(
+        "SELECT program_id FROM {$wpdb->prefix}user_program_access WHERE user_id = %d AND access_granted = 1",
         $current_user_id
     ));
+
+    // Fetch the ID of "The Expand Your Wisdom Toolkit" page
+    $wisdom_toolkit_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
+        'The Expand Your Wisdom Toolkit'
+    ));
+
+    // Check if the user has access to the Wisdom Toolkit
+    $wisdom_toolkit_access_granted = in_array($wisdom_toolkit_id, $granted_access_program_ids);
 
     if ($wisdom_toolkit_access_granted) {
         ?>
@@ -65,7 +74,7 @@ if (is_user_logged_in()) {
                                     <p>Does that sound scary – good! That means you are willing to <strong>challenge your own perspective</strong> and change your old story… and that is where powerful change comes from.</p>
                                     <p><strong>I wish to remind you that you are incredibly wise and intuitive!</strong> Even if you have forgotten, or wish you trusted it more often, your link to your intuitive wisdom is alive and well within you, just waiting for opportunities to be allowed and acted upon.</p>
                                     <p>Many Blessings…</p>
-                                    <img src="<?php echo get_theme_file_uri('./images/logo_signature.png'); ?>"  alt="signature">
+                                    <img src="<?php echo get_theme_file_uri('./images/logo_signature.png'); ?>" alt="signature">
                                 </div><!--End: Card Cont-->
 
                                 <div class="card_foot">
@@ -74,7 +83,7 @@ if (is_user_logged_in()) {
                             </div><!--End: Card Box-->
                         </div>
 
-                        <?php if (get_field('module_audio')): ?>
+                        <?php if (get_field('module_audio')) : ?>
                             <div class="file-item">
                                 <div class="p5"><?php the_field('module_title'); ?></div>
                                 <a class="theme-btn btn-style-six" href="<?php echo esc_url(get_field('module_audio')['url']); ?>" class="btn btn--full" target="_blank"><?php echo esc_html(get_field('module_title')); ?></a>
@@ -92,7 +101,7 @@ if (is_user_logged_in()) {
                             </div>
                             <div class="module-files">
                                 <?php for ($i = 0; $i <= 1; $i++) : // Loop to handle multiple files ?>
-                                    <?php 
+                                    <?php
                                     $audio_field = get_field('module_audio' . ($i ? "_$i" : ''));
                                     $audio_title = get_field('module_title' . ($i ? "_$i" : ''));
                                     $pdf_field = get_field('module_file_pdf' . ($i ? "_$i" : ''));
@@ -120,7 +129,7 @@ if (is_user_logged_in()) {
                     <?php
                 endwhile;
                 wp_reset_postdata();
-            else:
+            else :
                 echo '<p>No content found</p>';
             endif;
             ?>
@@ -158,8 +167,14 @@ if (is_user_logged_in()) {
         echo '<hr>';
     }
 } else {
-    echo '<p>You must be logged in to view this content.</p>';
+    echo '<p class="center-text no-access-audios-login">You must be logged in to view this content.</p>';
+    echo '<div class="no-program-access">';
+    echo '<a href="' . wp_login_url() . '" class="btn btn--full btn-no-program">Login</a>';
+    echo '</div>';
+    echo '<hr>';
 }
 
 get_footer();
 ?>
+
+

@@ -1,6 +1,13 @@
 .section-program-audios {
   padding: 9.6rem 0;
 }
+.wisdom-file {
+  border: 1px solid goldenrod;
+  border-bottom: none;
+}
+.wisdom-img {
+  height: 32rem;
+}
 .audio-sub {
   font-size: 3.2rem;
   color: #fff;

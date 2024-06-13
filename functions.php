@@ -576,3 +576,9 @@ function mrj_on_user_delete($user_id) {
 // Add the hook into WordPress
 add_action('delete_user', 'mrj_on_user_delete');
 
+// Function to normalize product names by replacing non-breaking spaces with regular spaces
+if (!function_exists('normalize_product_name')) {
+    function normalize_product_name($name) {
+        return str_replace("\u{00A0}", ' ', html_entity_decode(trim($name), ENT_QUOTES, 'UTF-8'));
+    }
+}

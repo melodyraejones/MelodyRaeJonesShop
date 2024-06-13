@@ -9,11 +9,20 @@ if (is_user_logged_in()) {
     global $wpdb;
     $current_user_id = get_current_user_id();
 
-    // Fetch the access for Wisdom Toolkit from the custom table
-    $wisdom_toolkit_access_granted = $wpdb->get_var($wpdb->prepare(
-        "SELECT access_granted FROM {$wpdb->prefix}wisdom_toolkit_access WHERE user_id = %d",
+    // Fetch the program IDs that have access granted for the current user from the custom table
+    $granted_access_program_ids = $wpdb->get_col($wpdb->prepare(
+        "SELECT program_id FROM {$wpdb->prefix}user_program_access WHERE user_id = %d AND access_granted = 1",
         $current_user_id
     ));
+
+    // Fetch the ID of "The Expand Your Wisdom Toolkit" page
+    $wisdom_toolkit_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
+        'The Expand Your Wisdom Toolkit'
+    ));
+
+    // Check if the user has access to the Wisdom Toolkit
+    $wisdom_toolkit_access_granted = in_array($wisdom_toolkit_id, $granted_access_program_ids);
 
     if ($wisdom_toolkit_access_granted) {
         // Query posts from the custom post type 'Expand Your Wisdom Toolkit Content'
@@ -25,7 +34,7 @@ if (is_user_logged_in()) {
         ));
 
         if ($wisdom_toolkit_posts->have_posts()) {
-            echo '<section class="section-program-audios service-detail-section background-toolkit"><div class="container center-text"><h2 class="wisdom-heading" style="margin-bottom:15px">Welcome!</h2>';
+            echo '<section class="section-program-audios service-detail-section background-tool"><div class="container center-text"><h2 class="wisdom-heading" style="margin-bottom:15px">Welcome!</h2>';
             echo '<div class="text" style="padding-bottom:12px">
             <p>Expanding your connection to your intuition is one of the most powerful and foundational things that you can do for yourself. It allows you to re-create yourself each and every day to include intuitively-guided choices and actions that support the highest view for you and your life.<br><br>
             It also provides a strong foundation for making decisions that more closely align with your heart, soul and life purpose, thereby allowing you to increase your personal effectiveness within all areas of your life.<br><br>

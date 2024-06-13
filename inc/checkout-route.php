@@ -93,18 +93,15 @@ function mrj_handle_stripe_webhook() {
     try {
         $event = \Stripe\Webhook::constructEvent($payload, $sig_header, $webhookSecretKey);
     } catch (\UnexpectedValueException $e) {
-   
         http_response_code(400);
         exit();
     } catch (\Stripe\Exception\SignatureVerificationException $e) {
-       
         http_response_code(400);
         exit();
     }
 
     if ($event->type == 'checkout.session.completed') {
         $session = $event->data->object;
-      
 
         $user_id = $session->metadata->user_id;
         $product_names = json_decode($session->metadata->product_names);
@@ -193,8 +190,6 @@ function mrj_handle_stripe_webhook() {
         if ($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}cart'") == "{$wpdb->prefix}cart") {
             if (function_exists('clear_user_cart_items')) {
                 clear_user_cart_items($user_id);
-            } else {
-                error_log('Function clear_user_cart_items does not exist.');
             }
         }
 
@@ -208,8 +203,6 @@ function mrj_handle_stripe_webhook() {
         ];
 
         wp_mail($user_email, $subject, $message, $headers);
-
-    
     }
 
     http_response_code(200);
@@ -219,53 +212,19 @@ function mrj_handle_stripe_webhook() {
 // Function to handle the purchase of the Wisdom Toolkit
 function handle_wisdom_toolkit_purchase($user_id, $user_email) {
     global $wpdb;
-    $toolkit_table = $wpdb->prefix . 'wisdom_toolkit_access';
     $table_name = $wpdb->prefix . 'user_program_access';
 
-    $wisdom_toolkit_exists = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $toolkit_table WHERE user_id = %d",
-        $user_id
+    // Get the ID of "The Expand Your Wisdom Toolkit" page
+    $toolkit_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'page'",
+        'The Expand Your Wisdom Toolkit'
     ));
 
-    if ($wisdom_toolkit_exists) {
-        $updated_toolkit = $wpdb->update(
-            $toolkit_table,
-            ['access_granted' => 1],
-            ['user_id' => $user_id]
-        );
-        if ($updated_toolkit !== false) {
-        
-        } else {
-            error_log('Failed to update Wisdom Toolkit access for user ID: ' . $user_id . ' Error: ' . $wpdb->last_error);
-        }
-    } else {
-        $inserted_toolkit = $wpdb->insert($toolkit_table, [
-            'user_id' => $user_id,
-            'user_email' => $user_email,
-            'access_granted' => 1,
-            'created_at' => current_time('mysql', 1)
-        ]);
-        if ($inserted_toolkit !== false) {
-            error_log('Inserted new Wisdom Toolkit access for user ID: ' . $user_id);
-        } else {
-            error_log('Failed to insert new Wisdom Toolkit access for user ID: ' . $user_id . ' Error: ' . $wpdb->last_error);
-        }
-    }
-
-    // Grant access to all modules of the custom post type 'wisdomtoolkitcontent'
-    $modules = get_posts([
-        'post_type' => 'wisdomtoolkitcontent',
-        'posts_per_page' => -1
-    ]);
-
-    foreach ($modules as $module) {
-        $program_name = $module->post_title;
-        $program_id = $module->ID;
-
+    if ($toolkit_id) {
         $exists = $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d",
             $user_id,
-            $program_id
+            $toolkit_id
         ));
 
         if ($exists) {
@@ -274,21 +233,21 @@ function handle_wisdom_toolkit_purchase($user_id, $user_email) {
                 ['access_granted' => 1],
                 [
                     'user_id' => $user_id,
-                    'program_id' => $program_id
+                    'program_id' => $toolkit_id
                 ]
             );
-          
         } else {
             $wpdb->insert($table_name, [
                 'user_id' => $user_id,
                 'user_email' => $user_email,
-                'program_id' => $program_id,
-                'program_name' => $program_name,
+                'program_id' => $toolkit_id,
+                'program_name' => 'The Expand Your Wisdom Toolkit',
                 'access_granted' => 1,
                 'created_at' => current_time('mysql', 1)
             ]);
-           
         }
+    } else {
+        error_log('Program not found: The Expand Your Wisdom Toolkit');
     }
 }
 
