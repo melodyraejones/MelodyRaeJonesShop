@@ -41,15 +41,14 @@
                            
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>                            </button>
+                            <span class="icon-bar"></span></button>
                         </div>
                        
                         <div class="navbar-collapse collapse clearfix">
                             <ul class="navigation clearfix">
                                 <li><a href="https://melodyraejones.com/">Home</a>
                                 <li>
-                                <li class="current"><a href="https://melodyraejones.com/shop">Shop</a>
-                                <li>
+                              
                                 <li class="dropdown"><a href="melody.html">About</a>
                                     <ul>
                                         <li><a href="https://melodyraejones.com/offerings/main.html">Meet Melody</a></li>
@@ -59,7 +58,7 @@
                               </li>
                                 <li><a href="https://melodyraejones.com/offerings/main.html">Offerings</a></li>
                                 <li><a href="https://melodyraejones.com/events/upcoming.html">Events</a></li>
-                                <li class="dropdown"><a href="products/free_resources.html">Products</a>
+                                <li class="dropdown current"><a href="products/free_resources.html">Products</a>
                                     <ul>
                                         <li><a href="https://melody-rae-jones-consulting.square.site/">Online Meditations</a></li>
                                         <li><a href="products/online_programs.html">Online Programs</a></li>

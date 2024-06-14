@@ -102,8 +102,11 @@ if (is_user_logged_in()) {
         echo '</section>';
     }
 } else {
-    echo '<p>You must be logged in to view this content.</p>';
+    echo '<p class="center-text no-access-audios-login">You must be logged in to view this content.</p>';
+    echo '<div class="no-program-access">';
+    echo '<a href="' . wp_login_url() . '" class="btn btn--full btn-no-program">Login</a>';
+    echo '</div>';
+    echo '<hr>';
 }
-
 get_footer();
 ?>
