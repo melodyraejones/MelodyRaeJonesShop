@@ -1,0 +1,133 @@
+#content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.weekly-zen-heading {
+  font-size: 4rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+.site-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.weekly-zen-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+div.weekly-zen-post {
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #a285b450;
+}
+
+.weekly-zen-post:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.post-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.post-date {
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.post-date i {
+  margin-right: 0.5rem;
+  color: #ff9800;
+}
+
+.post-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+div.post-content {
+  font-size: 1.5rem;
+  color: #555;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.read-more {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #ff9800;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+}
+
+.read-more:hover {
+  background-color: #e68a00;
+  transform: translateY(-2px);
+}
+
+.center-text {
+  text-align: center;
+}
+
+.btn-explore {
+  width: 50%;
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background-color: #333;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.view-all {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.view-all-link {
+  background-color: #ff9800;
+  color: #fff;
+  padding: 2rem 3rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+  font-size: 1.5rem;
+}
+
+.view-all-link:hover {
+  background-color: #e68a00;
+  transform: translateY(-2px);
+}

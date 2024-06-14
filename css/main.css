@@ -17,6 +17,9 @@
 @import url("sent.css");
 @import url("expand-wisdom.css");
 @import url("expand-wisdom-toolkit.css");
+@import url("weekly-zen.css");
+@import url("weekly-single.css");
+@import url("archive-weekly-zen.css");
 
 * {
   margin: 0px;
