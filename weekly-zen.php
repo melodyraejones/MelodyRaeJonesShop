@@ -33,7 +33,8 @@ if ($weeklyZen->have_posts()) {
     echo '</div>';
     ?> 
     <p class="view-all">
-        <a href="<?php echo home_url('/weekly-zens/'); ?>" class="view-all-link">View All</a>
+        <!-- <a href="<?php echo home_url('/weekly-zens/'); ?>" class="view-all-link">View All</a> -->
+        <a href="https://melodyraejones.com/shop/weekly-zens" class="view-all-link">View All</a>
     </p>
     <?php
 } else {
