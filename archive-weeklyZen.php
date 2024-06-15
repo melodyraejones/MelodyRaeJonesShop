@@ -1,7 +1,4 @@
 <?php
-/*
-Template Name: Weekly Zen Archive
-*/
 
 get_header();
 
