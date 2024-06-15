@@ -1,3 +1,9 @@
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+}
 /* Program Audios Section Styles */
 .section-program-audios {
   padding: 7.4rem 0;

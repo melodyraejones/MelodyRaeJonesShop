@@ -1,8 +1,14 @@
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+}
 .weekly-zen-archive {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem; /* Adds space between the columns and rows */
-  margin: 2rem 0;
+  margin: 2rem 2rem;
 }
 
 .weekly-zen-post {
@@ -70,4 +76,9 @@
 .pagination a:hover,
 .pagination span.current {
   background-color: #005177;
+}
+@media (max-width: 25em) {
+  .weekly-zen-archive {
+    grid-template-columns: 1fr;
+  }
 }

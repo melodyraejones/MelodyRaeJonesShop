@@ -1,6 +1,7 @@
 /*====================================================================
 					Fonts
 =====================================================================*/
+
 @import url("https://fonts.googleapis.com/css?family=Arimo:400,400i,700,700i|Courgette");
 
 @import url("header.css");
@@ -30,14 +31,8 @@
 html {
   font-size: 62.5%;
   font-family: "Arimo", sans-serif;
-  overflow-x: hidden;
+}
 
-  /* overflow-x: hidden; */
-}
-body {
-  /* define f family here */
-  overflow-x: hidden;
-}
 h1,
 h2,
 h3,

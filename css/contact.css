@@ -1,3 +1,9 @@
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+}
 /* Contact Us section */
 .section-cta {
   padding: 9.6rem 0;

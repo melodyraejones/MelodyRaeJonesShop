@@ -1,3 +1,60 @@
+html {
+  overflow-x: hidden;
+}
+body {
+  overflow-x: hidden;
+}
+#content {
+  position: relative;
+  padding-top: 20px;
+}
+
+.image-container {
+  width: 100%;
+  height: 300px; /* Adjust height as needed */
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  flex-direction: column; /* Arrange children in a column */
+}
+
+.background-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1; /* Ensure the image is behind the content */
+}
+
+.floating-image {
+  width: 150px;
+  height: auto;
+  animation: float 5s ease-in-out infinite;
+  margin-top: 1rem;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.post-title {
+  font-size: 3rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin: 0; /* Remove default margin */
+}
+
 .weekly-zen-post-single {
   max-width: 90rem;
   margin: 0 auto;
@@ -14,60 +71,6 @@
   margin-bottom: 3rem;
   text-align: center;
   position: relative;
-}
-
-.image-container {
-  position: relative;
-}
-
-.floating-image {
-  width: 150px;
-  height: auto;
-  animation: float 5s ease-in-out infinite;
-}
-
-.image-container::before {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  right: -20px;
-  bottom: -20px;
-  background: url("path_to_star_image.png") no-repeat center;
-  background-size: cover;
-  z-index: -1;
-  animation: float-stars 10s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes float-stars {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.post-title {
-  font-size: 3rem;
-  margin: 0;
-  color: #333;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .post-content-single {
@@ -104,4 +107,21 @@ audio.custom-audio-player {
 
 .recording-url {
   display: none;
+}
+
+@media (max-width: 50em) {
+  .weekly-zen-post-single {
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+}
+@media (max-width: 33.75em) {
+  .floating-image {
+    margin-top: 15rem;
+  }
+}
+@media (max-width: 24em) {
+  .floating-image {
+    width: 100px;
+  }
 }
