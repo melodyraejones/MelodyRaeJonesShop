@@ -60,7 +60,7 @@
                               </li>
                                 <li><a href="https://melodyraejones.com/offerings/main.html">Offerings</a></li>
                                 <li><a href="https://melodyraejones.com/events/upcoming.html">Events</a></li>
-                                <li class="dropdown current"><a href="products/free_resources.html">Products</a>
+                                <li class="dropdown current"><a href="#">Products</a>
                                     <ul>
                                         <li><a href="https://melody-rae-jones-consulting.square.site/">Online Meditations</a></li>
                                         <li><a href="products/online_programs.html">Online Programs</a></li>

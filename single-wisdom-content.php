@@ -39,7 +39,7 @@ if (is_user_logged_in()) {
                     // Fetch all posts in this custom post type
                     $all_posts = new WP_Query(array(
                         'posts_per_page' => -1,
-                        'post_type' => 'wisdom-toolkits',
+                        'post_type' => 'wisdom-content', // Ensure correct post type
                         'order' => 'ASC'
                     ));
 
@@ -153,7 +153,7 @@ if (is_user_logged_in()) {
                                     <a class="module-link" href="<?php echo get_permalink($next_post_id); ?>" style="color: #fff">Module <?php echo $current_index + 2; ?> &gt;&gt;</a>
                                 </li>
                             <?php endif; ?>
-                        </ul>
+                        </ul>                            
                     </div>
                 </div>
             </div>
@@ -176,5 +176,3 @@ if (is_user_logged_in()) {
 
 get_footer();
 ?>
-
-

@@ -1,24 +1,22 @@
 <?php get_header(); ?>
 
 <div id="primary" class="content-area">
-    <main id="main" class="site-main">
+    <main id="main" class="site-main full-width-height">
 
     <?php
 
-  if ( !have_posts() ) {
-    echo 'No posts found.';
-}
-    while ( have_posts() ) : the_post();
+    if (!have_posts()) {
+        echo 'No posts found.';
+    } else {
+        while (have_posts()) : the_post();
 
-       
-        the_content();
+            the_content();
 
-    
-    endwhile;
+        endwhile;
+    }
     ?>
 
     </main>
 </div>
-
 
 <?php get_footer(); ?>

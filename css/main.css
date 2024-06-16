@@ -21,6 +21,7 @@
 @import url("weekly-zen.css");
 @import url("weekly-single.css");
 @import url("archive-weekly-zen.css");
+@import url("index.css");
 
 * {
   margin: 0px;

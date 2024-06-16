@@ -28,7 +28,7 @@ if (is_user_logged_in()) {
         // Query posts from the custom post type 'Expand Your Wisdom Toolkit Content'
         $wisdom_toolkit_posts = new WP_Query(array(
             'posts_per_page' => -1,
-            'post_type' => 'wisdomtoolkitcontent',
+            'post_type' => 'wisdom-content',
             'post_status' => array('publish', 'private', 'acf-disabled'),
             'order' => 'ASC'
         ));
