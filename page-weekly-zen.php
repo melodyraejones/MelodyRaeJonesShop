@@ -7,7 +7,7 @@ get_header();
 
 $weeklyZen = new WP_Query(array(
     'posts_per_page' => 3,
-    'post_type' => 'weeklyZen'
+    'post_type' => 'weekly-zen'
 ));
 ?>
 

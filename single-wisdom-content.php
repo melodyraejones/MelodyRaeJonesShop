@@ -39,7 +39,7 @@ if (is_user_logged_in()) {
                     // Fetch all posts in this custom post type
                     $all_posts = new WP_Query(array(
                         'posts_per_page' => -1,
-                        'post_type' => 'wisdomtoolkitcontent',
+                        'post_type' => 'wisdom-toolkits',
                         'order' => 'ASC'
                     ));
 

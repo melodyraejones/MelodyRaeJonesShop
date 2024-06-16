@@ -6,7 +6,7 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 $weeklyZen = new WP_Query(array(
     'posts_per_page' => 8, // Number of posts per page
-    'post_type' => 'weeklyZen',
+    'post_type' => 'weekly-zen',
     'paged' => $paged
 ));
 
