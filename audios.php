@@ -69,7 +69,7 @@ if (is_user_logged_in()) {
                 echo "<img src='" . esc_url($toolkit_image_url) . "' class='program-img wisdom-img' alt='Expand Your Wisdom Toolkit'/>";
                 echo "<div class='card-content'>";
                 echo "<p class='audio-title'>Expand Your Wisdom Toolkit</p>";
-                echo "<a class='audio-link btn btn--full details' href='" . home_url('/wisdom-toolkit-modules/') . "'>Access Toolkit &rarr;</a>";
+                echo "<a class='audio-link btn btn--full details' href='" . home_url('/wisdom-toolkit-content/') . "'>Access Toolkit &rarr;</a>";
                 echo "</div></div>";  // Close card-content and audio-file divs
             }
 
