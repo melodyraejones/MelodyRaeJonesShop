@@ -61,6 +61,7 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
         ]);
         return new WP_REST_Response(['url' => $session->url], 200);
     } catch (Exception $e) {
+        error_log("Stripe Checkout Session creation failed: " . $e->getMessage());
         return new WP_REST_Response(['error' => $e->getMessage()], 500);
     }
 }
@@ -122,22 +123,25 @@ function mrj_handle_stripe_webhook() {
             // Use WP_Query to get the program ID
             $program_query = new WP_Query([
                 'post_type' => 'program',
-                'title' => $product_name,
+                's' => $product_name,
                 'post_status' => 'publish',
                 'posts_per_page' => 1,
                 'fields' => 'ids'
             ]);
 
+            error_log("Querying program ID for product: $product_name");
+
             if ($program_query->have_posts()) {
                 $program_query->the_post();
                 $program_id = get_the_ID();
                 wp_reset_postdata();
+                error_log("Found program ID: $program_id for product: $product_name");
             } else {
                 $program_id = null;
+                error_log("Program ID not found for product: $product_name");
             }
 
             if ($program_id) {
-                error_log("Processing product: $product_name, program ID: $program_id");
                 $exists = $wpdb->get_var($wpdb->prepare(
                     "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s",
                     $user_id,
@@ -169,8 +173,6 @@ function mrj_handle_stripe_webhook() {
                         error_log("Failed to insert program access for user ID: $user_id, program: $product_name");
                     }
                 }
-            } else {
-                error_log("Program ID not found for product: $product_name");
             }
         }
 
@@ -239,4 +241,71 @@ function mrj_handle_stripe_webhook() {
     http_response_code(200);
     exit();
 }
+// Function to handle the purchase of the Wisdom Toolkit
+function handle_wisdom_toolkit_purchase($user_id, $user_email) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'user_program_access';
 
+    // Use WP_Query to get the ID of "The Expand Your Wisdom Toolkit" page
+    $toolkit_query = new WP_Query([
+        'post_type' => 'page',
+        'title' => 'The Expand Your Wisdom Toolkit',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'fields' => 'ids'
+    ]);
+
+    if ($toolkit_query->have_posts()) {
+        $toolkit_query->the_post();
+        $toolkit_id = get_the_ID();
+        wp_reset_postdata();
+        error_log("Found toolkit ID: $toolkit_id");
+    } else {
+        $toolkit_id = null;
+        error_log("No toolkit found for 'The Expand Your Wisdom Toolkit'");
+    }
+
+    if ($toolkit_id) {
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d",
+            $user_id,
+            $toolkit_id
+        ));
+
+        if ($exists) {
+            $updated = $wpdb->update(
+                $table_name,
+                ['access_granted' => 1],
+                [
+                    'user_id' => $user_id,
+                    'program_id' => $toolkit_id
+                ]
+            );
+            if ($updated === false) {
+                error_log("Failed to update Wisdom Toolkit access for user ID: $user_id");
+            }
+        } else {
+            $inserted = $wpdb->insert($table_name, [
+                'user_id' => $user_id,
+                'user_email' => $user_email,
+                'program_id' => $toolkit_id,
+                'program_name' => 'The Expand Your Wisdom Toolkit',
+                'access_granted' => 1,
+                'created_at' => current_time('mysql', 1)
+            ]);
+            if ($inserted === false) {
+                error_log("Failed to insert Wisdom Toolkit access for user ID: $user_id");
+            }
+        }
+    } else {
+        error_log('Program not found: The Expand Your Wisdom Toolkit');
+    }
+}
+
+// Ensure the function `clear_user_cart_items` is defined only once
+if (!function_exists('clear_user_cart_items')) {
+    function clear_user_cart_items($user_id) {
+        global $wpdb;
+        $wpdb->delete($wpdb->prefix . 'cart', ['user_id' => $user_id]);
+    }
+}
