@@ -177,9 +177,7 @@ function mrj_handle_stripe_webhook() {
         }
 
         if ($wpdb->get_var("SHOW TABLES LIKE '{$wpdb->prefix}cart'") == "{$wpdb->prefix}cart") {
-            if (function_exists('clear_user_cart_items')) {
-                clear_user_cart_items($user_id);
-            }
+            clear_user_cart_items($user_id);
         }
 
         $subject = "Access Your Purchased Programs";
