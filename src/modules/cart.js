@@ -28,6 +28,11 @@ class MyCart {
       }
       this.initializeCart();
     }
+    // Ensure the notification element is present
+    this.notification = document.getElementById("notification");
+    if (!this.notification) {
+      console.error("Notification element not found.");
+    }
   }
 
   events() {
@@ -155,13 +160,21 @@ class MyCart {
     const relatedPrograms = button.getAttribute("data-related-programs")
       ? JSON.parse(button.getAttribute("data-related-programs"))
       : [];
+
+    // Check if the user has already purchased this program
+    const alreadyPurchased = await this.checkIfAlreadyPurchased(productId);
+    if (alreadyPurchased) {
+      // Show a notification to the user
+      this.showNotification(`You have already purchased ${title}.`, "error");
+      return;
+    }
+
     const existingItemIndex = this.cartItems.findIndex(
       (item) => item.productId == productId
     );
 
     if (existingItemIndex > -1) {
       quantityElement.textContent = this.cartItems[existingItemIndex].quantity; // Update UI quantity
-
       button.disabled = true;
     } else {
       const cartItem = {
@@ -174,6 +187,38 @@ class MyCart {
       this.cartItems.push(cartItem);
       quantityElement.textContent = "1"; // Initialize UI quantity
       await this.addItemToCart(cartItem, button, programElement);
+    }
+  }
+
+  async checkIfAlreadyPurchased(productId) {
+    try {
+      const response = await axios.get(
+        `${mrjData.root_url}/wp-json/mrj/v1/check-purchase/${productId}`,
+        {
+          headers: {
+            "X-WP-Nonce": mrjData.nonce,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      return response.data.alreadyPurchased;
+    } catch (e) {
+      console.error("Failed to check if already purchased:", e);
+      return false;
+    }
+  }
+
+  showNotification(message, type) {
+    if (this.notification) {
+      this.notification.textContent = message;
+      this.notification.className = `notification ${type}`;
+      setTimeout(() => {
+        this.notification.textContent = "";
+        this.notification.className = "notification";
+      }, 5000);
+    } else {
+      console.error("Notification element not found.");
     }
   }
 

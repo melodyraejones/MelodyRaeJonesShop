@@ -15,6 +15,7 @@ get_header();
 
 <section class="cart-details container">
     <h2 class="heading-secondary" id="cart">Your Order Summary</h2>
+
     <div class="cart-items" id="cart-items">
         <?php 
         $userItems = new WP_Query(array(

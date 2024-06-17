@@ -8,6 +8,7 @@ get_header();
 
 <section class="section-programs">
     <div class="header-cart">
+    <div class="notification" id="notification"></div>
         <a href="<?php echo esc_url( home_url( '/shop/cart/' ) ); ?>" class="cart-link">
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-badge">0</span>

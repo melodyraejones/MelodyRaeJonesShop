@@ -26,6 +26,18 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
         return normalize_product_name($item['name']);
     }, $validated_data['items']);
 
+    // Check if the user has already purchased any of the products
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'user_program_access';
+    $purchased_programs = $wpdb->get_col($wpdb->prepare(
+        "SELECT program_name FROM $table_name WHERE user_id = %d AND program_name IN (" . implode(',', array_fill(0, count($product_names), '%s')) . ") AND access_granted = 1",
+        array_merge([$user_id], $product_names)
+    ));
+
+    if (!empty($purchased_programs)) {
+        return new WP_REST_Response(['error' => 'You have already purchased: ' . implode(', ', $purchased_programs)], 400);
+    }
+
     $line_items = array_map(function($item) {
         return [
             'price_data' => [
@@ -37,10 +49,7 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
         ];
     }, $validated_data['items']);
 
-    // Ensure relatedPrograms exists in metadata
     $related_programs = isset($validated_data['relatedPrograms']) ? $validated_data['relatedPrograms'] : [];
-
-    // Check if the user is purchasing the "Expand Your Wisdom Toolkit"
     $is_wisdom_toolkit_purchased = in_array('The Expand Your Wisdom Toolkit', $product_names);
 
     try {
@@ -65,6 +74,7 @@ function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
         return new WP_REST_Response(['error' => $e->getMessage()], 500);
     }
 }
+
 
 // Register the /checkout route
 add_action('rest_api_init', function () {

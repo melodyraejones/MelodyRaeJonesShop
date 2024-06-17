@@ -582,3 +582,31 @@ if (!function_exists('normalize_product_name')) {
         return str_replace("\u{00A0}", ' ', html_entity_decode(trim($name), ENT_QUOTES, 'UTF-8'));
     }
 }
+
+function check_if_already_purchased(WP_REST_Request $request) {
+    $user_id = get_current_user_id();
+    $product_id = $request->get_param('product_id');
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'user_program_access';
+
+    $program_name = get_the_title($product_id);
+
+    $already_purchased = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s AND access_granted = 1",
+        $user_id,
+        $program_name
+    ));
+
+    return new WP_REST_Response(['alreadyPurchased' => $already_purchased > 0], 200);
+}
+
+add_action('rest_api_init', function () {
+    register_rest_route('mrj/v1', '/check-purchase/(?P<product_id>\d+)', array(
+        'methods' => 'GET',
+        'callback' => 'check_if_already_purchased',
+        'permission_callback' => function () {
+            return is_user_logged_in();
+        }
+    ));
+});
