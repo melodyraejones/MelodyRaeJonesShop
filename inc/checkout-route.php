@@ -257,7 +257,7 @@ function handle_wisdom_toolkit_purchase($user_id, $user_email) {
 }
 
 if (!function_exists('clear_user_cart_items')) {
-    function clear_user_cart_items($user_id) {
+    function clear_user_cart_items($user_id) {   
         global $wpdb;
         $wpdb->delete($wpdb->prefix . 'cart', ['user_id' => $user_id]);
     }
