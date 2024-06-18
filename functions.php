@@ -12,6 +12,8 @@ function get_cart_url() {
         return 'http://melodyraejones.local/shop/cart/';
     }
 }
+
+
 // Custom wp_mail function for logging
 add_filter('wp_mail', 'custom_wp_mail');
 function custom_wp_mail($args) {
@@ -54,27 +56,16 @@ if (!function_exists('wp_new_user_notification')) {
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
 
-        // Send the email using PHPMailer
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        // Email headers
+        $headers = array('Content-Type: text/html; charset=UTF-8');
 
-        try {
-            $mail->isSMTP();
-            $mail->SMTPAuth = true;
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
-            $mail->Username = 'akshaysharma581995@gmail.com';
-            $mail->Password = 'feulvpnfltokqjkd';
-            $mail->setFrom('akshaysharma581995@gmail.com', 'Melody');
-            $mail->addAddress($user_email);
-            $mail->Subject = sprintf(__('[%s] Login Details'), get_option('blogname'));
-            $mail->Body = nl2br($message); // Convert newlines to HTML line breaks
-            $mail->isHTML(true);
-            $mail->send();
+        // Send the email using wp_mail
+        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
 
+        if ($sent) {
             error_log("New user notification email sent to: $user_email");
-        } catch (PHPMailer\PHPMailer\Exception $e) {
-            error_log("Failed to send new user notification email to: $user_email. Error: " . $mail->ErrorInfo);
+        } else {
+            error_log("Failed to send new user notification email to: $user_email");
         }
     }
 }
@@ -82,12 +73,16 @@ if (!function_exists('wp_new_user_notification')) {
 // Hook into user registration
 add_action('user_register', 'wp_new_user_notification');
 
+
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
     function wp_password_change_notification($user) {
         return; // Disable the default notification for password change
     }
 }
+
+
+
 
 //direct checkout route:
 
