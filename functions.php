@@ -611,18 +611,9 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 }
 
 
-
 function send_new_program_email_on_publish($new_status, $old_status, $post) {
-    // Add logging to check the conditions
-    error_log('send_new_program_email_on_publish triggered');
-    error_log('Post ID: ' . $post->ID);
-    error_log('Post type: ' . $post->post_type);
-    error_log('Old status: ' . $old_status);
-    error_log('New status: ' . $new_status);
-
     // Only send email when the post transitions from any status to 'publish' and it is of type 'program'
     if ($old_status === 'publish' || $new_status !== 'publish' || $post->post_type !== 'program') {
-        error_log('Email not sent. Conditions not met.');
         return;
     }
 
@@ -631,18 +622,33 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
 
     // Check if there are users to send emails to
     if (empty($users)) {
-        error_log('No users found to send email to.');
         return;
     }
 
     // Prepare the email content
     $subject = "New Program Available: " . $post->post_title;
-    $message = "Hello,<br><br>A new program has been added: " . $post->post_title . "<br><br>";
-    $message .= "You can view the program here: <a href='" . get_permalink($post->ID) . "'>" . get_permalink($post->ID) . "</a><br><br>";
-    $message .= "Thank you.";
-
-    // Log the email details for debugging
-    error_log('Sending new program email with subject: ' . $subject);
+    $message = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .content { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px; background-color: #ffffff; }
+            h1 { color: #333333; }
+            p { color: #555555; }
+            a { color: #0073aa; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+        </style>
+    </head>
+    <body>
+        <div class='content'>
+            <h1>New Program Added: " . $post->post_title . "</h1>
+            <p>Hello,</p>
+            <p>A new program has been added: <strong>" . $post->post_title . "</strong></p>
+            <p>You can view the program here: <a href='" . get_permalink($post->ID) . "'>" . get_permalink($post->ID) . "</a></p>
+            <p>Thank you.</p>
+        </div>
+    </body>
+    </html>";
 
     // Initialize PHPMailer
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -655,7 +661,7 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
         $mail->Port = 587;
         $mail->Username = 'akshaysharma581995@gmail.com';
         $mail->Password = 'feulvpnfltokqjkd';
-        $mail->setFrom('akshaysharma581995@gmail.com', 'Your Name');
+        $mail->setFrom('akshaysharma581995@gmail.com', 'Melody');
         $mail->isHTML(true);  // Set email format to HTML
 
         // Loop through each user and send the email
@@ -664,12 +670,7 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
             $mail->Subject = $subject;
             $mail->Body = $message;
 
-            if ($mail->send()) {
-                error_log('Email sent to: ' . $user->user_email);
-            } else {
-                error_log('Failed to send email to: ' . $user->user_email);
-            }
-
+            $mail->send(); // Send the email
             $mail->clearAddresses();  // Clear all addresses for the next iteration
         }
     } catch (PHPMailer\PHPMailer\Exception $e) {
@@ -679,3 +680,4 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
 
 // Hook into the transition_post_status action to send email when a new program is published
 add_action('transition_post_status', 'send_new_program_email_on_publish', 10, 3);
+
