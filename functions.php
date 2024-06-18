@@ -28,6 +28,24 @@ function custom_wp_mail($args) {
     return $args;
 }
 
+// Custom wp_mail function for logging
+add_filter('wp_mail', 'custom_wp_mail');
+function custom_wp_mail($args) {
+    // Set default headers if not present
+    if (empty($args['headers'])) {
+        $args['headers'] = array(
+            'From: Your Name <melody@melodyraejones.com>',
+            'Content-Type: text/html; charset=UTF-8'
+        );
+    }
+
+    // Log email arguments for debugging
+    error_log(print_r($args, true));
+
+    // Return modified arguments
+    return $args;
+}
+
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
@@ -67,7 +85,7 @@ if (!function_exists('wp_new_user_notification')) {
 }
 
 // Hook into user registration
-add_action('user_register', 'wp_new_user_notification');
+add_action('user_register', 'wp_new_user_notification')
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
     function wp_password_change_notification($user) {
