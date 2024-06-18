@@ -583,6 +583,7 @@ if (!function_exists('normalize_product_name')) {
     }
 }
 
+// Register the /check-purchase route
 add_action('rest_api_init', function () {
     register_rest_route('mrj/v1', '/check-purchase/(?P<id>\d+)', array(
         'methods' => 'GET',

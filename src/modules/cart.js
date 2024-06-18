@@ -74,6 +74,16 @@ class MyCart {
       : [];
     const quantity = 1;
 
+    // Check if the user has already purchased this product
+    const alreadyPurchased = await this.checkIfAlreadyPurchased(
+      productId,
+      title
+    );
+    if (alreadyPurchased) {
+      this.showNotification(`You have already purchased ${title}.`, "error");
+      return;
+    }
+
     const existingItemIndex = this.cartItems.findIndex(
       (item) => item.productId == productId
     );
@@ -87,7 +97,6 @@ class MyCart {
       this.updateCartUI();
     }
   }
-
   async initializeCart() {
     await this.loadCartItems();
     if (window.location.href.includes("/shop/cart/")) {
@@ -155,16 +164,18 @@ class MyCart {
         .querySelector(".program-price")
         .textContent.replace("Price: $", "")
     );
-    const productId = button.getAttribute("data-id"); // Assuming you have a data attribute for the product's permanent ID
+    const productId = button.getAttribute("data-id");
     const quantityElement = programElement.querySelector(".product-quantity");
     const relatedPrograms = button.getAttribute("data-related-programs")
       ? JSON.parse(button.getAttribute("data-related-programs"))
       : [];
 
-    // Check if the user has already purchased this program
-    const alreadyPurchased = await this.checkIfAlreadyPurchased(productId);
+    // Check if the user has already purchased this product
+    const alreadyPurchased = await this.checkIfAlreadyPurchased(
+      productId,
+      title
+    );
     if (alreadyPurchased) {
-      // Show a notification to the user
       this.showNotification(`You have already purchased ${title}.`, "error");
       return;
     }

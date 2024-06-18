@@ -9,6 +9,7 @@ $product_id = get_the_ID();
 ?>
 
 <section class="program-details">
+<div class="notification" id="notification"></div>
 <div class="header-cart detailed-cart">
     <a href="<?php echo esc_url( home_url( '/shop/cart/' ) ); ?>">
             <i class="fas fa-shopping-cart"></i>

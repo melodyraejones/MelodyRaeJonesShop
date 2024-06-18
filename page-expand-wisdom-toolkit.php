@@ -21,6 +21,7 @@ $product_price = get_field('program_price', $page_id);
 ?>
 
 <section class="program-details">
+<div class="notification" id="notification"></div>
     <div class="header-cart detailed-cart">
         <a href="<?php echo esc_url(home_url('/shop/cart/')); ?>">
             <i class="fas fa-shopping-cart"></i>
