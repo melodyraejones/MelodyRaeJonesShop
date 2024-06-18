@@ -612,27 +612,61 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 
 
 //new program add email
-// Add email sending functionality when a new program is published
 function send_new_program_email($post_id, $post, $update) {
     // Only send email when a new post is published and it is of type 'program'
     if ($update || $post->post_type !== 'program' || $post->post_status !== 'publish') {
+        error_log('Email not sent. Conditions not met.');
         return;
     }
 
     // Get all registered users
     $users = get_users(['role__in' => ['subscriber', 'administrator', 'editor', 'author']]);
 
-    // Prepare the email
+    // Check if there are users to send emails to
+    if (empty($users)) {
+        error_log('No users found to send email to.');
+        return;
+    }
+
+    // Prepare the email content
     $subject = "New Program Available: " . $post->post_title;
     $message = "Hello,\n\nA new program has been added: " . $post->post_title . "\n\n";
     $message .= "You can view the program here: " . get_permalink($post_id) . "\n\n";
     $message .= "Thank you.";
 
-    $headers = ['Content-Type: text/html; charset=UTF-8'];
+    // Log the email details for debugging
+    error_log('Sending new program email with subject: ' . $subject);
 
-    // Loop through each user and send the email
-    foreach ($users as $user) {
-        wp_mail($user->user_email, $subject, nl2br($message), $headers);
+    // Initialize PHPMailer
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->Username = 'akshaysharma581995@gmail.com';
+        $mail->Password = 'feulvpnfltokqjkd';
+        $mail->setFrom('akshaysharma581995@gmail.com', 'Your Name');
+        $mail->isHTML(true);  // Set email format to HTML
+
+        // Loop through each user and send the email
+        foreach ($users as $user) {
+            $mail->addAddress($user->user_email);  // Add a recipient
+            $mail->Subject = $subject;
+            $mail->Body = nl2br($message);
+
+            if ($mail->send()) {
+                error_log('Email sent to: ' . $user->user_email);
+            } else {
+                error_log('Failed to send email to: ' . $user->user_email);
+            }
+
+            $mail->clearAddresses();  // Clear all addresses for the next iteration
+        }
+    } catch (PHPMailer\PHPMailer\Exception $e) {
+        error_log('PHPMailer error: ' . $e->getMessage());
     }
 }
 
