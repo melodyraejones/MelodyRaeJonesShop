@@ -583,30 +583,30 @@ if (!function_exists('normalize_product_name')) {
     }
 }
 
-function check_if_already_purchased(WP_REST_Request $request) {
+add_action('rest_api_init', function () {
+    register_rest_route('mrj/v1', '/check-purchase/(?P<id>\d+)', array(
+        'methods' => 'GET',
+        'callback' => 'mrj_check_if_already_purchased',
+        'permission_callback' => '__return_true'
+    ));
+});
+
+function mrj_check_if_already_purchased(WP_REST_Request $request) {
+    $product_id = intval($request['id']);
     $user_id = get_current_user_id();
-    $product_id = $request->get_param('product_id');
+
+    if (!$user_id) {
+        return new WP_REST_Response(['error' => 'User not logged in'], 401);
+    }
 
     global $wpdb;
     $table_name = $wpdb->prefix . 'user_program_access';
 
-    $program_name = get_the_title($product_id);
-
-    $already_purchased = $wpdb->get_var($wpdb->prepare(
-        "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_name = %s AND access_granted = 1",
+    $alreadyPurchased = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d AND access_granted = 1",
         $user_id,
-        $program_name
+        $product_id
     ));
 
-    return new WP_REST_Response(['alreadyPurchased' => $already_purchased > 0], 200);
+    return new WP_REST_Response(['alreadyPurchased' => $alreadyPurchased > 0], 200);
 }
-
-add_action('rest_api_init', function () {
-    register_rest_route('mrj/v1', '/check-purchase/(?P<product_id>\d+)', array(
-        'methods' => 'GET',
-        'callback' => 'check_if_already_purchased',
-        'permission_callback' => function () {
-            return is_user_logged_in();
-        }
-    ));
-});
