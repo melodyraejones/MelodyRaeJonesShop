@@ -620,35 +620,53 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
     // Get all registered users
     $users = get_users(['role__in' => ['subscriber', 'administrator', 'editor', 'author']]);
 
-    // Check if there are users to send emails to
-    if (empty($users)) {
-        return;
-    }
-
     // Prepare the email content
     $subject = "New Program Available: " . $post->post_title;
     $message = "
-    <html>
-    <head>
-        <style>
-            body { font-family: Arial, sans-serif; }
-            .content { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px; background-color: #ffffff; }
-            h1 { color: #333333; }
-            p { color: #555555; }
-            a { color: #0073aa; text-decoration: none; }
-            a:hover { text-decoration: underline; }
-        </style>
-    </head>
-    <body>
-        <div class='content'>
-            <h1>New Program Added: " . $post->post_title . "</h1>
-            <p>Hello,</p>
-            <p>A new program has been added: <strong>" . $post->post_title . "</strong></p>
-            <p>You can view the program here: <a href='" . get_permalink($post->ID) . "'>" . get_permalink($post->ID) . "</a></p>
-            <p>Thank you.</p>
-        </div>
-    </body>
-    </html>";
+        <html>
+        <head>
+            <style>
+                .email-container {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .email-header {
+                    background-color: #f4f4f4;
+                    padding: 10px;
+                    text-align: center;
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+                .email-body {
+                    padding: 20px;
+                }
+                .email-footer {
+                    background-color: #f4f4f4;
+                    padding: 10px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                }
+                a {
+                    color: #1a73e8;
+                }
+            </style>
+        </head>
+        <body>
+            <div class='email-container'>
+                <div class='email-header'>New Program Added</div>
+                <div class='email-body'>
+                    <p>Hello,</p>
+                    <p>A new program has been added: <strong>" . $post->post_title . "</strong></p>
+                    <p>You can view the program here: <a href='" . get_permalink($post->ID) . "'>" . get_permalink($post->ID) . "</a></p>
+                    <p>Thank you.</p>
+                </div>
+                <div class='email-footer'>This is an automated message. Please do not reply.</div>
+            </div>
+        </body>
+        </html>
+    ";
 
     // Initialize PHPMailer
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -670,7 +688,7 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
             $mail->Subject = $subject;
             $mail->Body = $message;
 
-            $mail->send(); // Send the email
+            $mail->send();
             $mail->clearAddresses();  // Clear all addresses for the next iteration
         }
     } catch (PHPMailer\PHPMailer\Exception $e) {
@@ -680,4 +698,3 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
 
 // Hook into the transition_post_status action to send email when a new program is published
 add_action('transition_post_status', 'send_new_program_email_on_publish', 10, 3);
-
