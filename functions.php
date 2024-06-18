@@ -611,11 +611,27 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 }
 
 
-//new program add email
+
+
 function send_new_program_email($post_id, $post, $update) {
+    // Add logging to check the conditions
+    error_log('send_new_program_email triggered');
+    error_log('Post ID: ' . $post_id);
+    error_log('Post type: ' . $post->post_type);
+    error_log('Post status: ' . $post->post_status);
+    error_log('Update flag: ' . ($update ? 'true' : 'false'));
+
     // Only send email when a new post is published and it is of type 'program'
-    if ($update || $post->post_type !== 'program' || $post->post_status !== 'publish') {
-        error_log('Email not sent. Conditions not met.');
+    if ($update) {
+        error_log('Email not sent. Condition: Update flag is true.');
+        return;
+    }
+    if ($post->post_type !== 'program') {
+        error_log('Email not sent. Condition: Post type is not "program".');
+        return;
+    }
+    if ($post->post_status !== 'publish') {
+        error_log('Email not sent. Condition: Post status is not "publish".');
         return;
     }
 
