@@ -613,25 +613,17 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 
 
 
-function send_new_program_email($post_id, $post, $update) {
+function send_new_program_email_on_publish($new_status, $old_status, $post) {
     // Add logging to check the conditions
-    error_log('send_new_program_email triggered');
-    error_log('Post ID: ' . $post_id);
+    error_log('send_new_program_email_on_publish triggered');
+    error_log('Post ID: ' . $post->ID);
     error_log('Post type: ' . $post->post_type);
-    error_log('Post status: ' . $post->post_status);
-    error_log('Update flag: ' . ($update ? 'true' : 'false'));
+    error_log('Old status: ' . $old_status);
+    error_log('New status: ' . $new_status);
 
-    // Only send email when a new post is published and it is of type 'program'
-    if ($update) {
-        error_log('Email not sent. Condition: Update flag is true.');
-        return;
-    }
-    if ($post->post_type !== 'program') {
-        error_log('Email not sent. Condition: Post type is not "program".');
-        return;
-    }
-    if ($post->post_status !== 'publish') {
-        error_log('Email not sent. Condition: Post status is not "publish".');
+    // Only send email when the post transitions from any status to 'publish' and it is of type 'program'
+    if ($old_status === 'publish' || $new_status !== 'publish' || $post->post_type !== 'program') {
+        error_log('Email not sent. Conditions not met.');
         return;
     }
 
@@ -647,7 +639,7 @@ function send_new_program_email($post_id, $post, $update) {
     // Prepare the email content
     $subject = "New Program Available: " . $post->post_title;
     $message = "Hello,\n\nA new program has been added: " . $post->post_title . "\n\n";
-    $message .= "You can view the program here: " . get_permalink($post_id) . "\n\n";
+    $message .= "You can view the program here: " . get_permalink($post->ID) . "\n\n";
     $message .= "Thank you.";
 
     // Log the email details for debugging
@@ -686,5 +678,5 @@ function send_new_program_email($post_id, $post, $update) {
     }
 }
 
-// Hook into the save_post action to send email when a new program is added
-add_action('save_post', 'send_new_program_email', 10, 3);
+// Hook into the transition_post_status action to send email when a new program is published
+add_action('transition_post_status', 'send_new_program_email_on_publish', 10, 3);
