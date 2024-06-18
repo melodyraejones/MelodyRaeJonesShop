@@ -55,10 +55,10 @@ if (!function_exists('wp_new_user_notification')) {
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
 
-        // Email headers
-        $headers = array('Content-Type: text/plain; charset=UTF-8');
+        // **Email headers**
+        $headers = array('From: Your Name <melody@melodyraejones.com>', 'Content-Type: text/html; charset=UTF-8');
 
-        // Log email details for debugging
+        // **Log email details for debugging**
         error_log("Sending new user notification to: $user_email");
 
         // Use wp_mail to send the email
