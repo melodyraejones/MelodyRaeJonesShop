@@ -14,28 +14,10 @@ function get_cart_url() {
 }
 
 
-// Custom wp_mail function for logging
-add_filter('wp_mail', 'custom_wp_mail');
-function custom_wp_mail($args) {
-    // Set default headers if not present
-    if (empty($args['headers'])) {
-        $args['headers'] = array(
-            'From: Your Name <melody@melodyraejones.com>',
-            'Content-Type: text/html; charset=UTF-8'
-        );
-    }
-
-    // Log email arguments for debugging
-    error_log(print_r($args, true));
-
-    // Return modified arguments
-    return $args;
-}
-
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
-        global $wpdb;
+        global $wpdb, $wp_hasher;
 
         // Get user data
         $user = get_userdata($user_id);
@@ -51,7 +33,7 @@ if (!function_exists('wp_new_user_notification')) {
         $key = wp_generate_password(20, false);
         do_action('retrieve_password_key', $user->user_login, $key);
 
-        // Set the email content
+        // Send the password reset link email
         $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
@@ -59,7 +41,10 @@ if (!function_exists('wp_new_user_notification')) {
         // Email headers
         $headers = array('Content-Type: text/html; charset=UTF-8');
 
-        // Send the email using wp_mail
+        // Log email details for debugging
+        error_log("Sending new user notification to: $user_email");
+
+        // Use wp_mail to send the email
         $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
 
         if ($sent) {
@@ -73,7 +58,6 @@ if (!function_exists('wp_new_user_notification')) {
 // Hook into user registration
 add_action('user_register', 'wp_new_user_notification');
 
-
 // Disable default password change notification
 if (!function_exists('wp_password_change_notification')) {
     function wp_password_change_notification($user) {
@@ -81,8 +65,24 @@ if (!function_exists('wp_password_change_notification')) {
     }
 }
 
+// Add SMTP settings if using PHPMailer directly
+add_action('phpmailer_init', 'configure_phpmailer');
+function configure_phpmailer(PHPMailer\PHPMailer\PHPMailer $phpmailer) {
+    $phpmailer->isSMTP();
+    $phpmailer->Host       = 'smtp.gmail.com'; // Set the SMTP server to send through
+    $phpmailer->SMTPAuth   = true;             // Enable SMTP authentication
+    $phpmailer->Username   = 'akshaysharma581995@gmail.com';  // SMTP username
+    $phpmailer->Password   = 'feulvpnfltokqjkd';  // SMTP password
+    $phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
+    $phpmailer->Port       = 587;              // TCP port to connect to
+}
 
-
+// Log email details
+add_filter('wp_mail', 'log_wp_mail');
+function log_wp_mail($args) {
+    error_log(print_r($args, true));
+    return $args;
+}
 
 //direct checkout route:
 
