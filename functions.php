@@ -50,24 +50,31 @@ if (!function_exists('wp_new_user_notification')) {
         $key = wp_generate_password(20, false);
         do_action('retrieve_password_key', $user->user_login, $key);
 
-        // Send the password reset link email
+        // Set the email content
         $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
+        
+        // Send the email using PHPMailer
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-        // **Email headers**
-        $headers = array('From: Your Name <melody@melodyraejones.com>', 'Content-Type: text/html; charset=UTF-8');
-
-        // **Log email details for debugging**
-        error_log("Sending new user notification to: $user_email");
-
-        // Use wp_mail to send the email
-        $sent = wp_mail($user_email, sprintf(__('[%s] Login Details'), get_option('blogname')), $message, $headers);
-
-        if ($sent) {
+        try {
+            $mail->isSMTP();
+            $mail->SMTPAuth = true;
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->Username = 'akshaysharma581995@gmail.com'; // Your SMTP username
+            $mail->Password = 'feulvpnfltokqjkd'; // Your SMTP password
+            $mail->setFrom('melody@melodyraejones.com', 'Your Name');
+            $mail->addAddress($user_email);
+            $mail->Subject = sprintf(__('[%s] Login Details'), get_option('blogname'));
+            $mail->Body = $message;
+            $mail->send();
+            
             error_log("New user notification email sent to: $user_email");
-        } else {
-            error_log("Failed to send new user notification email to: $user_email");
+        } catch (Exception $e) {
+            error_log("Failed to send new user notification email to: $user_email. Error: " . $mail->ErrorInfo);
         }
     }
 }
