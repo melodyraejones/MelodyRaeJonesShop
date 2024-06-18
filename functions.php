@@ -61,19 +61,19 @@ if (!function_exists('wp_new_user_notification')) {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
             $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPSecure = 'tls';
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
             $mail->Username = 'akshaysharma581995@gmail.com';
             $mail->Password = 'feulvpnfltokqjkd';
             $mail->setFrom('akshaysharma581995@gmail.com', 'Melody');
             $mail->addAddress($user_email);
             $mail->Subject = sprintf(__('[%s] Login Details'), get_option('blogname'));
-            $mail->Body = $message;
+            $mail->Body = nl2br($message); // Convert newlines to HTML line breaks
             $mail->isHTML(true);
             $mail->send();
 
             error_log("New user notification email sent to: $user_email");
-        } catch (Exception $e) {
+        } catch (PHPMailer\PHPMailer\Exception $e) {
             error_log("Failed to send new user notification email to: $user_email. Error: " . $mail->ErrorInfo);
         }
     }
@@ -88,7 +88,6 @@ if (!function_exists('wp_password_change_notification')) {
         return; // Disable the default notification for password change
     }
 }
-
 
 //direct checkout route:
 
