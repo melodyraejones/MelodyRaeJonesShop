@@ -238,7 +238,7 @@ function mrj_handle_stripe_webhook() {
         // Send email for general program access
         $subject = "Access Your Purchased Programs";
         $message = "Congratulations on your purchase! You can now access your purchased programs. Here is the link to access your programs:\n\n";
-        $message .= home_url('/your-programs');
+        $message .= home_url('/audio-files');
         $headers = [
             'From: Your Name <melody@melodyraejones.com>',
             'Content-Type' => 'text/html; charset=UTF-8'
@@ -250,7 +250,7 @@ function mrj_handle_stripe_webhook() {
         if ($is_wisdom_toolkit_purchased === 'true') {
             $subject_wisdom = "Access Your Expand Your Wisdom Toolkit";
             $message_wisdom = "Congratulations on purchasing 'The Expand Your Wisdom Toolkit'! You can now access it. Here is the link to access your toolkit:\n\n";
-            $message_wisdom .= home_url('/your-programs');
+            $message_wisdom .= home_url('/audio-files');
             wp_mail($user_email, $subject_wisdom, $message_wisdom, $headers);
         }
     }
