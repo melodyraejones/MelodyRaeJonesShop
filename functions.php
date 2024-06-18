@@ -31,12 +31,18 @@ function custom_wp_mail($args) {
     return $args;
 }
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'path/to/PHPMailer/src/Exception.php';
+require 'path/to/PHPMailer/src/PHPMailer.php';
+require 'path/to/PHPMailer/src/SMTP.php';
+
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
-        global $wpdb, $wp_hasher;
+        global $wpdb;
 
-        // Get user data
         $user = get_userdata($user_id);
         if (!$user) {
             error_log("Failed to get user data for user ID: $user_id");
@@ -50,13 +56,11 @@ if (!function_exists('wp_new_user_notification')) {
         $key = wp_generate_password(20, false);
         do_action('retrieve_password_key', $user->user_login, $key);
 
-        // Set the email content
         $message = sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
         $message .= __('To set your password, visit the following address:') . "\r\n\r\n";
         $message .= network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n\r\n";
-        
-        // Send the email using PHPMailer
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+        $mail = new PHPMailer(true);
 
         try {
             $mail->isSMTP();
@@ -64,14 +68,15 @@ if (!function_exists('wp_new_user_notification')) {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->Username = 'akshaysharma581995@gmail.com'; // Your SMTP username
-            $mail->Password = 'feulvpnfltokqjkd'; // Your SMTP password
-            $mail->setFrom('melody@melodyraejones.com', 'Your Name');
-            $mail->addAddress($user_email);
+            $mail->Username = 'your-email@gmail.com';
+            $mail->Password = 'your-email-password';
+            $mail->setFrom('your-email@gmail.com', 'Your Name');
+            $mail->addAddress($user_email, $user_login);
             $mail->Subject = sprintf(__('[%s] Login Details'), get_option('blogname'));
             $mail->Body = $message;
+
             $mail->send();
-            
+
             error_log("New user notification email sent to: $user_email");
         } catch (Exception $e) {
             error_log("Failed to send new user notification email to: $user_email. Error: " . $mail->ErrorInfo);
@@ -79,7 +84,6 @@ if (!function_exists('wp_new_user_notification')) {
     }
 }
 
-// Hook into user registration
 add_action('user_register', 'wp_new_user_notification');
 
 // Disable default password change notification
