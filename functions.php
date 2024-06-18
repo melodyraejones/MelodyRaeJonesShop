@@ -609,3 +609,32 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 
     return new WP_REST_Response(['alreadyPurchased' => $alreadyPurchased > 0], 200);
 }
+
+
+//new program add email
+// Add email sending functionality when a new program is published
+function send_new_program_email($post_id, $post, $update) {
+    // Only send email when a new post is published and it is of type 'program'
+    if ($update || $post->post_type !== 'program' || $post->post_status !== 'publish') {
+        return;
+    }
+
+    // Get all registered users
+    $users = get_users(['role__in' => ['subscriber', 'administrator', 'editor', 'author']]);
+
+    // Prepare the email
+    $subject = "New Program Available: " . $post->post_title;
+    $message = "Hello,\n\nA new program has been added: " . $post->post_title . "\n\n";
+    $message .= "You can view the program here: " . get_permalink($post_id) . "\n\n";
+    $message .= "Thank you.";
+
+    $headers = ['Content-Type: text/html; charset=UTF-8'];
+
+    // Loop through each user and send the email
+    foreach ($users as $user) {
+        wp_mail($user->user_email, $subject, nl2br($message), $headers);
+    }
+}
+
+// Hook into the save_post action to send email when a new program is added
+add_action('save_post', 'send_new_program_email', 10, 3);
