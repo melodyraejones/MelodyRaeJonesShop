@@ -612,7 +612,6 @@ function mrj_check_if_already_purchased(WP_REST_Request $request) {
 
 
 
-
 function send_new_program_email_on_publish($new_status, $old_status, $post) {
     // Add logging to check the conditions
     error_log('send_new_program_email_on_publish triggered');
@@ -638,8 +637,8 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
 
     // Prepare the email content
     $subject = "New Program Available: " . $post->post_title;
-    $message = "Hello,\n\nA new program has been added: " . $post->post_title . "\n\n";
-    $message .= "You can view the program here: " . get_permalink($post->ID) . "\n\n";
+    $message = "Hello,<br><br>A new program has been added: " . $post->post_title . "<br><br>";
+    $message .= "You can view the program here: <a href='" . get_permalink($post->ID) . "'>" . get_permalink($post->ID) . "</a><br><br>";
     $message .= "Thank you.";
 
     // Log the email details for debugging
@@ -663,7 +662,7 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
         foreach ($users as $user) {
             $mail->addAddress($user->user_email);  // Add a recipient
             $mail->Subject = $subject;
-            $mail->Body = nl2br($message);
+            $mail->Body = $message;
 
             if ($mail->send()) {
                 error_log('Email sent to: ' . $user->user_email);
