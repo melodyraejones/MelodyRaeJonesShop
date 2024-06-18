@@ -13,7 +13,6 @@ function get_cart_url() {
     }
 }
 
-
 // Custom new user notification function
 if (!function_exists('wp_new_user_notification')) {
     function wp_new_user_notification($user_id, $notify = 'both') {
