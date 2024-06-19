@@ -29,11 +29,19 @@ if (have_posts()) :
             $weekly_recording = get_field('weekly_recording');
             if ($weekly_recording) : ?>
                 <div class="weekly-recording">
-                    <audio controls>
+                    <audio controls id="weekly-audio">
                         <source src="<?php echo esc_url($weekly_recording['url']); ?>" type="audio/mpeg">
                         Your browser does not support the audio element.
                     </audio>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const audio = document.getElementById('weekly-audio');
+                        const audioClone = audio.cloneNode(true);
+                        audioClone.controlsList = "nodownload";
+                        audio.parentNode.replaceChild(audioClone, audio);
+                    });
+                </script>
             <?php else : ?>
                 <p>No recording found.</p>
             <?php endif; ?>
