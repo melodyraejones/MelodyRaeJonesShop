@@ -243,7 +243,7 @@ class MyCart {
         relatedPrograms: item.relatedPrograms,
         status: "private",
       };
-
+      console.log("coming here");
       const response = await axios.post(
         `${mrjData.root_url}/wp-json/wp/v2/cart`,
         payload,

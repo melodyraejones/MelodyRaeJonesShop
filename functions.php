@@ -3,6 +3,8 @@ require_once get_template_directory() . '/vendor/autoload.php';
 require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
 require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
 require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+// Include Customizer settings
+require get_template_directory() . '/inc/customizer.php';
 
 // Include Customizer settings
 require get_template_directory() . '/inc/customizer.php';
@@ -404,6 +406,14 @@ function mrj_files() {
 }
 
 add_action('wp_enqueue_scripts', 'mrj_files');
+
+add_action('wp_enqueue_scripts', 'remove_inline_styles', 20);
+function remove_inline_styles() {
+    if (is_page_template('page-default.php')) {
+        // Remove all inline styles for this template
+        remove_action('wp_enqueue_scripts', 'mrj_customizer_css');
+    }
+}
 
 
 

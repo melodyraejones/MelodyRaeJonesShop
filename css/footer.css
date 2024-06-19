@@ -1,6 +1,5 @@
 /* General Footer Styles */
 footer {
-  /* font-family: "Courgette", cursive; */
   font-weight: 400;
   font-style: normal;
 }
@@ -37,7 +36,6 @@ footer h2 {
 .footer-column {
   flex: 1;
   min-width: 280px;
-  /* margin-bottom: 30px; */
   padding: 0 15px;
 }
 
@@ -120,7 +118,6 @@ footer h2 {
 .social2 {
   font-size: 24px;
   color: #efefef;
-  /* margin-top: 40px; */
 }
 
 .social2 a {
@@ -156,7 +153,6 @@ footer h2 {
 
 .footer-bottom {
   padding: 14px 0px 12px;
-  background: #643482;
   text-align: center;
   border-top: 1px solid #562973;
 }
@@ -177,9 +173,7 @@ footer h2 {
   text-decoration: underline;
 }
 
-/*========================================
-		Scroll To Top style
-==========================================*/
+/* Scroll To Top style */
 .scroll-to-top {
   position: fixed;
   bottom: 20px;
@@ -193,19 +187,18 @@ footer h2 {
   text-align: center;
   z-index: 100;
   cursor: pointer;
-  background: #562973; /*2b2e83;*/
+  background: #562973;
   border-radius: 100%;
   box-shadow: 1px 1px 10px #333;
   display: none;
-  -webkit-transition: all 300ms ease;
-  -moz-transition: all 300ms ease;
-  -ms-transition: all 300ms ease;
-  -o-transition: all 300ms ease;
   transition: all 300ms ease;
 }
 
 .scroll-to-top:hover {
   background-color: #7b6d86 !important;
+}
+.theme-btn.btn-style-two {
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {

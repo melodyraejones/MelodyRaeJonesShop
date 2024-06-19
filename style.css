@@ -5,7 +5,14 @@ Version: 1.0
 */
 html,
 body {
-  overflow-x: hidden;
   margin: 0;
   padding: 0;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 60em) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }

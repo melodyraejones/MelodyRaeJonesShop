@@ -330,6 +330,7 @@ class MyCart {
         relatedPrograms: item.relatedPrograms,
         status: "private"
       };
+      console.log("coming here");
       const response = await axios__WEBPACK_IMPORTED_MODULE_0__["default"].post(`${mrjData.root_url}/wp-json/wp/v2/cart`, payload, {
         headers: {
           "X-WP-Nonce": mrjData.nonce,

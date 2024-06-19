@@ -271,4 +271,8 @@ function mrj_customizer_css() {
     wp_add_inline_style('mrj-main-style', $custom_css);
 }
 add_action('wp_enqueue_scripts', 'mrj_customizer_css');
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> new-main-temp
