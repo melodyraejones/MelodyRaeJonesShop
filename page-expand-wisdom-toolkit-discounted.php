@@ -29,12 +29,11 @@ $discounted_price = get_field('program_price', $page_id); // Assuming 'program_p
 // Get the actual price from the Expand Wisdom Toolkit page
 $actual_price_page = get_page_by_title('Expand Wisdom Toolkit'); // Adjust the title to match the exact page title
 
-// Debugging - Check if the actual price page is retrieved correctly
+// Check if the actual price page is retrieved correctly
 if ($actual_price_page) {
     $actual_price_page_id = $actual_price_page->ID;
     $actual_price = get_field('program_price', $actual_price_page_id); // Assuming 'program_price' is the ACF field name for the actual price
 } else {
-    echo 'Failed to retrieve the Expand Wisdom Toolkit page.';
     $actual_price = null;
 }
 
@@ -42,16 +41,10 @@ if ($actual_price_page) {
 if (!$actual_price) {
     $actual_price = 97; // Default actual price
 }
-
-// Debugging - Print the values to check if they are retrieved correctly
-echo '<pre>';
-echo 'Discounted Price: ' . $discounted_price . '<br>';
-echo 'Actual Price: ' . $actual_price . '<br>';
-echo '</pre>';
 ?>
 
 <section class="program-details">
-<div class="notification" id="notification"></div>
+    <div class="notification" id="notification"></div>
     <div class="header-cart detailed-cart">
         <a href="<?php echo esc_url(home_url('/shop/cart/')); ?>">
             <i class="fas fa-shopping-cart"></i>
@@ -59,10 +52,10 @@ echo '</pre>';
         </a>
     </div>
     <div class="back-button">
-                <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <i class="fas fa-arrow-left"></i> Back to Homepage
-                </a>
-            </div>
+        <a href="<?php echo esc_url(home_url('/')); ?>">
+            <i class="fas fa-arrow-left"></i> Back to Homepage
+        </a>
+    </div>
     <div class="product grid grid--2-cols">
         <div class="product-image-box product-image-box-wisdom">
             <?php if ($featured_image_url) : ?>
