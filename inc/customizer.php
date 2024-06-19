@@ -168,12 +168,25 @@ function mrj_customize_register($wp_customize) {
         'sanitize_callback' => 'sanitize_hex_color',
     ));
 
-    // Add Control for Sign Me Up Button Link Color
-    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_link_color', array(
+ 
+     // Add Control for Sign Me Up Button Link Color
+     $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_link_color', array(
         'label' => __('Sign Me Up Button Link Color', 'mrj_theme'),
         'section' => 'mrj_footer_section',
         'settings' => 'mrj_signup_button_link_color',
     )));
+    
+    // Add Setting for Sign Me Up Button Hover Color
+    $wp_customize->add_setting('mrj_signup_button_hover_color', array(
+        'default' => '#ffffff',
+        'sanitize_callback' => 'sanitize_hex_color',
+    ));
+ // Add Control for Sign Me Up Button Hover Color
+ $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_hover_color', array(
+    'label' => __('Sign Me Up Button Hover Color', 'mrj_theme'),
+    'section' => 'mrj_footer_section',
+    'settings' => 'mrj_signup_button_hover_color',
+)));
 }
 
 add_action('customize_register', 'mrj_customize_register');
@@ -189,6 +202,7 @@ function mrj_customizer_css() {
     $footer_bottom_text_color = get_theme_mod('mrj_footer_bottom_text_color', '#ffffff');
     $signup_button_bg_color = get_theme_mod('mrj_signup_button_bg_color', '#562973');
     $signup_button_link_color = get_theme_mod('mrj_signup_button_link_color', '#ffffff');
+    $signup_button_hover_color = get_theme_mod('mrj_signup_button_hover_color', '#ffffff');
     
     $custom_css = "
         .header-lower {
@@ -234,12 +248,13 @@ function mrj_customizer_css() {
         footer.main-footer .contact-info li a {
             color: {$footer_text_color} !important;
         }
-        .theme-btn.btn-style-two {
+      .theme-btn.btn-style-two {
             background-color: {$signup_button_bg_color} !important;
             color: {$signup_button_link_color} !important;
         }
-        .theme-btn.btn-style-two:hover {
-            color: #ffffff !important;
+      .theme-btn.btn-style-two:hover {
+            background-color: {$signup_button_hover_color} !important; // Modify this line
+            color: {$signup_button_link_color} !important; // Keep the link color the same on hover
         }
         .footer-bottom {
             background-color: {$footer_bottom_bg_color} !important;
