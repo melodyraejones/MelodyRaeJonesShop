@@ -3,6 +3,8 @@ require_once get_template_directory() . '/vendor/autoload.php';
 require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
 require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
 require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+// Include Customizer settings
+require get_template_directory() . '/inc/customizer.php';
 
 //cart url
 function get_cart_url() {
@@ -388,9 +390,11 @@ add_filter('the_title', function($title, $id = null) {
 // require_once(__DIR__ . '/vendor/autoload.php');
 
 function mrj_files() {
-    // Enqueue a CSS file
-    wp_enqueue_style('mrj_extra_styles', get_theme_file_uri('/css/main.css'));
-
+    if (!is_page_template('page-default.php')) {
+        // Enqueue a CSS file
+        wp_enqueue_style('mrj_extra_styles', get_theme_file_uri('/css/main.css'));
+    }
+    
     // This script adds support for various browsers that don't support ES modules or certain modern JavaScript features.
     add_action('wp_footer', function () {
         echo '<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>';
@@ -399,6 +403,14 @@ function mrj_files() {
 }
 
 add_action('wp_enqueue_scripts', 'mrj_files');
+
+add_action('wp_enqueue_scripts', 'remove_inline_styles', 20);
+function remove_inline_styles() {
+    if (is_page_template('page-default.php')) {
+        // Remove all inline styles for this template
+        remove_action('wp_enqueue_scripts', 'mrj_customizer_css');
+    }
+}
 
 
 
