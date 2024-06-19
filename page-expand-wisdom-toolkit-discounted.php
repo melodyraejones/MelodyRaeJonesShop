@@ -8,17 +8,14 @@ get_header();
 wp_enqueue_style('expand-wisdom-toolkit', get_template_directory_uri() . '/css/program-details.css');
 
 // Fetch the page ID dynamically by title
-$page = get_page_by_title('The Expand Your Wisdom Offer');
-$page_id = 1637; // Replace with your actual page ID
-// Fetch the page content
-$page = get_post($page_id);
-
-// Check if page content is fetched correctly
+$page = get_page_by_path('the-expand-your-wisdom-offer'); // Use the slug instead of the title
 if (!$page) {
     echo 'Failed to retrieve page content.';
     get_footer();
     exit;
 }
+
+$page_id = $page->ID;
 
 // Get the featured image URL
 $featured_image_url = get_the_post_thumbnail_url($page_id, 'full');
@@ -27,7 +24,7 @@ $featured_image_url = get_the_post_thumbnail_url($page_id, 'full');
 $discounted_price = get_field('program_price', $page_id); // Assuming 'program_price' is the ACF field name for the discounted price
 
 // Get the actual price from the Expand Wisdom Toolkit page
-$actual_price_page = get_page_by_title('Expand Wisdom Toolkit'); // Adjust the title to match the exact page title
+$actual_price_page = get_page_by_path('expand-wisdom-toolkit'); // Use the slug instead of the title
 
 // Check if the actual price page is retrieved correctly
 if ($actual_price_page) {
