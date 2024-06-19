@@ -15,14 +15,19 @@ if (is_user_logged_in()) {
         $current_user_id
     ));
 
-    // Fetch the ID of "The Expand Your Wisdom Toolkit" page
+    // Fetch the IDs of "The Expand Your Wisdom Toolkit" and "The Expand Your Wisdom Toolkit Discounted" pages
     $wisdom_toolkit_id = $wpdb->get_var($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
         'The Expand Your Wisdom Toolkit'
     ));
 
-    // Check if the user has access to the Wisdom Toolkit
-    $wisdom_toolkit_access_granted = in_array($wisdom_toolkit_id, $granted_access_program_ids);
+    $wisdom_toolkit_discounted_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
+        'The Expand Your Wisdom Toolkit Discounted'
+    ));
+
+    // Check if the user has access to either the full or discounted version
+    $wisdom_toolkit_access_granted = in_array($wisdom_toolkit_id, $granted_access_program_ids) || in_array($wisdom_toolkit_discounted_id, $granted_access_program_ids);
 
     if ($wisdom_toolkit_access_granted) {
         // Query posts from the custom post type 'Expand Your Wisdom Toolkit Content'
