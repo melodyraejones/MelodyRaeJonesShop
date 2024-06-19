@@ -82,6 +82,153 @@
 .wisdom-toolkit-margin-bottom-md {
   margin-bottom: 4.8rem;
 }
+
+/* Expand Wisdom Toolkit Styles */
+.program-details-wisdom {
+  padding: 7.4rem 0;
+  height: 100vh;
+}
+
+/* Adjusting the image and its container */
+.wisdom-toolkit-product-image-box {
+  text-align: center;
+  margin-bottom: 2rem; /* Reduce the margin-bottom */
+  justify-self: end;
+}
+
+.product-image-box-wisdom {
+  width: 70%;
+  margin-bottom: 2rem;
+  justify-self: end;
+}
+
+.wisdom-toolkit-product-img {
+  width: 100%; /* Ensure full width */
+  max-width: 300px;
+  height: auto;
+  background-color: #643482;
+  justify-self: end;
+}
+.add_to_cart_details {
+  font-size: 2rem;
+}
+
+/* Enhance the price display with animation and matching theme color */
+.wisdom-program-price {
+  font-size: 2.4rem; /* Increase the font size */
+  font-weight: bold; /* Make the text bold */
+  color: #562973; /* Matching the theme color */
+  margin-top: 1rem; /* Add some space above the price */
+  text-align: center;
+  position: relative;
+  animation: pulse 2s 3; /* Adding a pulse animation */
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Style the price container with an icon */
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.price-icon {
+  font-size: 2.4rem;
+  color: #562973;
+  margin-right: 0.5rem;
+  animation: bounce 2s 3;
+  margin-top: 1rem;
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Below 1024px */
+@media (max-width: 64em) {
+  .wisdom-toolkit-grid {
+    gap: 2.6rem;
+  }
+
+  .wisdom-toolkit-product-description {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  .wisdom-toolkit-product-description p {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Below 800px */
+@media (max-width: 50em) {
+  .wisdom-toolkit-container {
+    padding: 0 6.2rem;
+  }
+
+  .wisdom-toolkit-grid {
+    gap: 1.2rem;
+  }
+
+  .wisdom-toolkit-product-img {
+    width: 100%;
+  }
+
+  .wisdom-toolkit-product-description {
+    font-size: 1.4rem;
+  }
+
+  .wisdom-toolkit-product-image-box {
+    padding-left: 3rem;
+  }
+
+  .product-image-box-wisdom {
+    justify-self: center;
+  }
+}
+
+/* Below 560px */
+@media (max-width: 35em) {
+  .product-image-box {
+    justify-self: center;
+  }
+
+  .wisdom-toolkit-product-description {
+    text-align: left;
+    padding: 0 2rem;
+  }
+
+  .product-details-box {
+    padding: 0 2rem;
+  }
+}
+
 /*====================================================================
 					 	Serivces Single
 ====================================================================*/
