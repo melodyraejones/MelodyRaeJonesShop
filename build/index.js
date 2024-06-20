@@ -553,6 +553,47 @@ function initializeDirectCheckout() {
 
 /***/ }),
 
+/***/ "./src/modules/timer.js":
+/*!******************************!*\
+  !*** ./src/modules/timer.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initializeCountdownTimers: () => (/* binding */ initializeCountdownTimers)
+/* harmony export */ });
+// modules/countdownTimer.js
+function initializeCountdownTimers() {
+  document.addEventListener("DOMContentLoaded", function () {
+    const posts = document.querySelectorAll(".weekly-zen-post");
+    posts.forEach(post => {
+      const expirationTime = post.getAttribute("data-expiration-time");
+      const countdownElement = post.querySelector(".countdown-timer");
+      if (expirationTime && countdownElement) {
+        const expirationDate = new Date(parseInt(expirationTime) * 1000);
+        const interval = setInterval(() => {
+          const now = new Date().getTime();
+          const distance = expirationDate - now;
+          if (distance < 0) {
+            clearInterval(interval);
+            countdownElement.innerHTML = "This post has expired";
+            post.style.display = "none"; // Optionally hide the post
+          } else {
+            const hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+            const minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
+            const seconds = Math.floor(distance % (1000 * 60) / 1000);
+            countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+          }
+        }, 1000);
+      }
+    });
+  });
+}
+
+/***/ }),
+
 /***/ "./node_modules/axios/lib/adapters/adapters.js":
 /*!*****************************************************!*\
   !*** ./node_modules/axios/lib/adapters/adapters.js ***!
@@ -4789,6 +4830,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_direct_checkout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/direct-checkout */ "./src/modules/direct-checkout.js");
 /* harmony import */ var _modules_audio__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/audio */ "./src/modules/audio.js");
 /* harmony import */ var _modules_audio__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_modules_audio__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/timer */ "./src/modules/timer.js");
 // Our modules / classes
 // import MobileMenu from "./modules/MobileMenu";
 
@@ -4801,10 +4843,12 @@ __webpack_require__.r(__webpack_exports__);
 // import MelsFavoritesCart from "./modules/melsFavoritesCart";
 
 
+
 const myCart = new _modules_cart__WEBPACK_IMPORTED_MODULE_0__["default"]();
 // const melFavCart = new MelsFavoritesCart();
 
 (0,_modules_direct_checkout__WEBPACK_IMPORTED_MODULE_1__.initializeDirectCheckout)();
+(0,_modules_timer__WEBPACK_IMPORTED_MODULE_3__.initializeCountdownTimers)();
 // Mobile navigation
 const btnNavEl = document.querySelector(".btn-mobile-nav");
 const headerEl = document.querySelector(".main-header");

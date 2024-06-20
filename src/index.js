@@ -10,11 +10,13 @@ import MyCart from "./modules/cart";
 // import MelsFavoritesCart from "./modules/melsFavoritesCart";
 import { initializeDirectCheckout } from "./modules/direct-checkout";
 import "./modules/audio";
+import { initializeCountdownTimers } from "./modules/timer";
 
 const myCart = new MyCart();
 // const melFavCart = new MelsFavoritesCart();
 
 initializeDirectCheckout();
+initializeCountdownTimers();
 // Mobile navigation
 const btnNavEl = document.querySelector(".btn-mobile-nav");
 const headerEl = document.querySelector(".main-header");

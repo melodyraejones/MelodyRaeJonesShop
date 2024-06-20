@@ -6,6 +6,7 @@ require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
 
 // Include Customizer settings
 require get_template_directory() . '/inc/customizer.php';
+require get_template_directory() . '/inc/timer.php';
 //cart url
 function get_cart_url() {
     if (WP_ENV === 'production') {

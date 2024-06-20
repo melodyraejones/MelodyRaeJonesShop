@@ -1,0 +1,35 @@
+.countdown-timer {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #ff0000;
+  font-weight: bold;
+}
+.circular-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.circular-timer div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #562973;
+}
+
+.circular-timer span {
+  display: block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f9f9f9;
+  border: 5px solid #562973;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}

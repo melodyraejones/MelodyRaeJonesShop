@@ -49,10 +49,11 @@
                 <div class="footer-widget social-widget clearfix">
                     <h2>Follow Me</h2>
                     <div class="text">
-                        <div class="social2" style="margin-top:-10px"><br />
-                            <a href="http://www.facebook.com/melodyraejonesconsulting" title="Find me on Facebook" target="_blank" style="text-decoration:none">f</a> 
-                            <a href="https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g" title="Check out my Youtube Channel" target="_blank" style="text-decoration:none">y</a>
-                        </div><!--End: Social-->
+                    <div class="social2">
+                    <a href="http://www.facebook.com/melodyraejonesconsulting" title="Find me on Facebook" target="_blank" class="fa fa-facebook"></a>
+                    <a href="https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g" title="Check out my Youtube Channel" target="_blank" class="fa fa-youtube youtube"></a>
+                    </div>
+
                     </div><!--End: Text-->
                 </div><!--End: Footer Widget-->
                 
