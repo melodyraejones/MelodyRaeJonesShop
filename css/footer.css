@@ -61,6 +61,7 @@ footer h2 {
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-left: -4rem;
 }
 
 .contact-info li {
@@ -94,6 +95,8 @@ footer h2 {
   margin-bottom: 8px;
   padding-left: 10px;
   position: relative;
+  margin-left: -2rem;
+  margin-bottom: 1rem;
 }
 
 .footer-widget .list li a {
@@ -121,7 +124,6 @@ footer h2 {
 .social2 {
   font-size: 24px;
   color: #efefef;
-  margin-top: 10px;
 }
 
 .social2 a {
@@ -135,11 +137,12 @@ footer h2 {
   text-decoration: none;
   margin-right: 15px;
   box-shadow: 1px 1px 5px #555;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .social2 a:hover {
-  background-color: #6a9c07; /* Hover background color */
   transform: scale(1.1); /* Slightly increase the size on hover */
   opacity: 0.8; /* Add a bit of transparency */
 }

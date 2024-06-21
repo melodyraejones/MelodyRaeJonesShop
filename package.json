@@ -16,7 +16,7 @@
     "wp-scripts": "^0.0.1-security"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^27.9.0"
+    "@wordpress/scripts": "^28.1.0"
   },
   "description": ""
 }

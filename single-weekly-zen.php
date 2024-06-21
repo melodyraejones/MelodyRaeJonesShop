@@ -14,6 +14,10 @@ $featured_image_url = get_the_post_thumbnail_url($weekly_zen_page_id, 'full');
 if (have_posts()) :
     while (have_posts()) : the_post(); ?>
         <div class="weekly-zen-post-single">
+            <div class="timer-container">
+                <div class="countdown-timer"></div>
+                <div>Time remaining to view this content</div>
+            </div>
             <div class="image-container">
                 <img src="<?php echo get_theme_file_uri('/images/mel_weekly.png'); ?>" class="background-image" alt="Weekly Zen Background">
                 <h1 class="post-title"><?php the_title(); ?></h1>
@@ -41,6 +45,35 @@ if (have_posts()) :
                         audioClone.controlsList = "nodownload";
                         audio.parentNode.replaceChild(audioClone, audio);
                     });
+
+                    // Timer functionality
+                    const expirationTime = <?php echo strtotime('+48 hours'); ?>;
+                    const countdownElement = document.querySelector('.countdown-timer');
+
+                    function updateTimer() {
+                        const now = new Date().getTime();
+                        const distance = expirationTime * 1000 - now;
+
+                        if (distance < 0) {
+                            countdownElement.innerHTML = "This post has expired";
+                            return;
+                        }
+
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                        countdownElement.innerHTML = `
+                            <div class="circular-timer">
+                                <div class="hours"><span>${hours}</span>h</div>
+                                <div class="minutes"><span>${minutes}</span>m</div>
+                                <div class="seconds"><span>${seconds}</span>s</div>
+                            </div>
+                        `;
+                    }
+
+                    setInterval(updateTimer, 1000);
+                    updateTimer(); // Initial call
                 </script>
             <?php else : ?>
                 <p>No recording found.</p>

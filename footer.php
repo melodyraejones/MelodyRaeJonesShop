@@ -7,15 +7,15 @@
                     <div class="widget-content" style="margin-left:15px">
                         <div class="footer-row clearfix">
                             <ul class="contact-info">
-                                <li class="address"><span class="icon icon-location"></span>
+                                <li class="address"><span class="icon fa fa-map-marker"></span>
                                     Location: <br />
                                     Regina, Saskatchewan Canada
                                 </li>
-                                <li style="margin-bottom:10px"><span class="icon icon-phone"></span>
+                                <li style="margin-bottom:10px"><span class="icon fa fa-volume-control-phone"></span>
                                     Phone (Voice Only &ndash; No Texting): <br />
                                     306.757.9300
                                 </li>
-                                <li><span class="icon icon-mail"></span>
+                                <li><span class="icon fa fa-envelope"></span>
                                     <a href="mailto:melody@melodyraejones.com" style="color:#fff">Email: <br />
                                     melody@melodyraejones.com</a>
                                 </li>                            

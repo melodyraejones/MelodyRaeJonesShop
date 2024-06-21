@@ -564,10 +564,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   initializeCountdownTimers: () => (/* binding */ initializeCountdownTimers)
 /* harmony export */ });
-// modules/countdownTimer.js
 function initializeCountdownTimers() {
   document.addEventListener("DOMContentLoaded", function () {
-    const posts = document.querySelectorAll(".weekly-zen-post");
+    const posts = document.querySelectorAll(".weekly-zen-post, .weekly-zen-post-single");
     posts.forEach(post => {
       const expirationTime = post.getAttribute("data-expiration-time");
       const countdownElement = post.querySelector(".countdown-timer");
@@ -584,7 +583,13 @@ function initializeCountdownTimers() {
             const hours = Math.floor(distance % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
             const minutes = Math.floor(distance % (1000 * 60 * 60) / (1000 * 60));
             const seconds = Math.floor(distance % (1000 * 60) / 1000);
-            countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+            countdownElement.innerHTML = `
+              <div class="circular-timer">
+                <div class="hours"><span>${hours}</span>h</div>
+                <div class="minutes"><span>${minutes}</span>m</div>
+                <div class="seconds"><span>${seconds}</span>s</div>
+              </div>
+            `;
           }
         }, 1000);
       }

@@ -1,7 +1,8 @@
-// modules/countdownTimer.js
 export function initializeCountdownTimers() {
   document.addEventListener("DOMContentLoaded", function () {
-    const posts = document.querySelectorAll(".weekly-zen-post");
+    const posts = document.querySelectorAll(
+      ".weekly-zen-post, .weekly-zen-post-single"
+    );
 
     posts.forEach((post) => {
       const expirationTime = post.getAttribute("data-expiration-time");
@@ -26,7 +27,13 @@ export function initializeCountdownTimers() {
             );
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+            countdownElement.innerHTML = `
+              <div class="circular-timer">
+                <div class="hours"><span>${hours}</span>h</div>
+                <div class="minutes"><span>${minutes}</span>m</div>
+                <div class="seconds"><span>${seconds}</span>s</div>
+              </div>
+            `;
           }
         }, 1000);
       }

@@ -4,6 +4,7 @@
   color: #ff0000;
   font-weight: bold;
 }
+
 .circular-timer {
   display: flex;
   justify-content: center;
@@ -23,8 +24,8 @@
 
 .circular-timer span {
   display: block;
-  width: 80px;
-  height: 80px;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   background-color: #f9f9f9;
   border: 5px solid #562973;
@@ -32,4 +33,15 @@
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
+}
+
+.timer-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }

@@ -129,10 +129,15 @@ function mrj_handle_stripe_webhook() {
 
         // Insert or update access in user_program_access table for purchased products
         foreach ($product_names as $product_name) {
-            // Use WP_Query to get the program ID
+            if ($product_name === 'Expand Wisdom Toolkit Discounted') {
+                handle_wisdom_toolkit_discounted_purchase($user_id, $user_email);
+                continue;
+            }
+
+            // Use WP_Query to get the program ID by exact title
             $program_query = new WP_Query([
-                'post_type' => 'program',
-                's' => $product_name,
+                'post_type' => 'page',
+                'title' => $product_name,  // Exact title from the product name
                 'post_status' => 'publish',
                 'posts_per_page' => 1,
                 'fields' => 'ids'
@@ -259,6 +264,72 @@ function mrj_handle_stripe_webhook() {
     exit();
 }
 
+function handle_wisdom_toolkit_discounted_purchase($user_id, $user_email) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'user_program_access';
+
+    error_log("Handling purchase for Expand Wisdom Toolkit Discounted for user ID: $user_id");
+
+    // Use WP_Query to get the ID of "Expand Wisdom Toolkit Discounted" page
+    $discounted_toolkit_query = new WP_Query([
+        'post_type' => 'page',
+        'title' => 'Expand Wisdom Toolkit Discounted',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'fields' => 'ids'
+    ]);
+
+    if ($discounted_toolkit_query->have_posts()) {
+        $discounted_toolkit_query->the_post();
+        $discounted_toolkit_id = get_the_ID();
+        wp_reset_postdata();
+        error_log("Found discounted toolkit ID: $discounted_toolkit_id");
+    } else {
+        $discounted_toolkit_id = null;
+        error_log("No discounted toolkit found for 'Expand Wisdom Toolkit Discounted'");
+    }
+
+    if ($discounted_toolkit_id) {
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE user_id = %d AND program_id = %d",
+            $user_id,
+            $discounted_toolkit_id
+        ));
+
+        if ($exists) {
+            $updated = $wpdb->update(
+                $table_name,
+                ['access_granted' => 1],
+                [
+                    'user_id' => $user_id,
+                    'program_id' => $discounted_toolkit_id
+                ]
+            );
+            if ($updated === false) {
+                error_log("Failed to update discounted toolkit access for user ID: $user_id");
+            } else {
+                error_log("Updated discounted toolkit access for user ID: $user_id");
+            }
+        } else {
+            $inserted = $wpdb->insert($table_name, [
+                'user_id' => $user_id,
+                'user_email' => $user_email,
+                'program_id' => $discounted_toolkit_id,
+                'program_name' => 'Expand Wisdom Toolkit Discounted',
+                'access_granted' => 1,
+                'created_at' => current_time('mysql', 1)
+            ]);
+            if ($inserted === false) {
+                error_log("Failed to insert discounted toolkit access for user ID: $user_id");
+            } else {
+                error_log("Inserted discounted toolkit access for user ID: $user_id");
+            }
+        }
+    } else {
+        error_log('Program not found: Expand Wisdom Toolkit Discounted');
+    }
+}
+
 // Function to handle the purchase of the Wisdom Toolkit
 function handle_wisdom_toolkit_purchase($user_id, $user_email) {
     global $wpdb;
@@ -301,6 +372,8 @@ function handle_wisdom_toolkit_purchase($user_id, $user_email) {
             );
             if ($updated === false) {
                 error_log("Failed to update Wisdom Toolkit access for user ID: $user_id");
+            } else {
+                error_log("Updated Wisdom Toolkit access for user ID: $user_id");
             }
         } else {
             $inserted = $wpdb->insert($table_name, [
@@ -313,6 +386,8 @@ function handle_wisdom_toolkit_purchase($user_id, $user_email) {
             ]);
             if ($inserted === false) {
                 error_log("Failed to insert Wisdom Toolkit access for user ID: $user_id");
+            } else {
+                error_log("Inserted Wisdom Toolkit access for user ID: $user_id");
             }
         }
     } else {

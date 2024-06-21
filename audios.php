@@ -15,17 +15,19 @@ if (is_user_logged_in()) {
         $current_user_id
     ));
 
-
     // Fetch the ID of "The Expand Your Wisdom Toolkit" page
     $wisdom_toolkit_id = $wpdb->get_var($wpdb->prepare(
         "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
         'The Expand Your Wisdom Toolkit'
     ));
 
+    // Fetch the ID of "The Expand Your Wisdom Offer" page
+    $wisdom_toolkit_offer_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = 'page' AND post_status = 'publish'",
+        'The Expand Your Wisdom Offer'
+    ));
 
-    $is_wisdom_toolkit_purchased = in_array($wisdom_toolkit_id, $granted_access_program_ids);
-
-  
+    $is_wisdom_toolkit_purchased = in_array($wisdom_toolkit_id, $granted_access_program_ids) || in_array($wisdom_toolkit_offer_id, $granted_access_program_ids);
 
     if (!empty($granted_access_program_ids)) {
         // Query audio posts that have a related program which the user has access to
@@ -62,7 +64,7 @@ if (is_user_logged_in()) {
                 }
             }
 
-            // Add the card for "Expand Your Wisdom Toolkit" if purchased
+            // Add the card for "Expand Your Wisdom Toolkit" or "Expand Your Wisdom Offer" if purchased
             if ($is_wisdom_toolkit_purchased) {
                 $toolkit_image_url = get_the_post_thumbnail_url($wisdom_toolkit_id, 'full') ?: get_stylesheet_directory_uri() . '/images/path_to_default_image.jpg';
                 echo "<div class='audio-file wisdom-file'>";
