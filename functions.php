@@ -1,15 +1,18 @@
 <?php 
+// Include Composer autoload
 require_once get_template_directory() . '/vendor/autoload.php';
 require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
 require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
 require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
 
+
 // Include Customizer settings
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/timer.php';
-//cart url
+
+// Cart URL
 function get_cart_url() {
-    if (WP_ENV === 'production') {
+    if (defined('WP_ENV') && WP_ENV === 'production') {
         return 'https://melodyraejones.com/contact/cart/';
     } else {
         return 'http://melodyraejones.local/shop/cart/';
@@ -69,21 +72,25 @@ if (!function_exists('wp_password_change_notification')) {
 
 // Add SMTP settings if using PHPMailer directly
 add_action('phpmailer_init', 'configure_phpmailer');
-function configure_phpmailer(PHPMailer\PHPMailer\PHPMailer $phpmailer) {
-    $phpmailer->isSMTP();
-    $phpmailer->Host       = 'smtp.gmail.com'; // Set the SMTP server to send through
-    $phpmailer->SMTPAuth   = true;             // Enable SMTP authentication
-    $phpmailer->Username   = 'akshaysharma581995@gmail.com';  // SMTP username
-    $phpmailer->Password   = 'feulvpnfltokqjkd';  // SMTP password
-    $phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS; // Enable TLS encryption
-    $phpmailer->Port       = 587;              // TCP port to connect to
-}
+function configure_phpmailer($phpmailer) {
+    if (class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        $smtpHost = defined('SMTP_HOST') ? SMTP_HOST : '';
+        $smtpAuth = defined('SMTP_AUTH') ? SMTP_AUTH : false;
+        $smtpUsername = defined('SMTP_USERNAME') ? SMTP_USERNAME : '';
+        $smtpPassword = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
+        $smtpSecure = defined('SMTP_SECURE') ? SMTP_SECURE : '';
+        $smtpPort = defined('SMTP_PORT') ? SMTP_PORT : 25;
 
-// Log email details
-add_filter('wp_mail', 'log_wp_mail');
-function log_wp_mail($args) {
-    error_log(print_r($args, true));
-    return $args;
+        $phpmailer->isSMTP();
+        $phpmailer->Host       = $smtpHost; 
+        $phpmailer->SMTPAuth   = $smtpAuth;
+        $phpmailer->Username   = $smtpUsername;
+        $phpmailer->Password   = $smtpPassword;
+        $phpmailer->SMTPSecure = $smtpSecure == 'tls' ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        $phpmailer->Port       = $smtpPort;
+    } else {
+        error_log('PHPMailer class does not exist');
+    }
 }
 
 //direct checkout route:
@@ -141,17 +148,16 @@ function handle_custom_contact_form_submission() {
         try {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-            $mail->Username = 'akshaysharma581995@gmail.com';
-            $mail->Password = 'feulvpnfltokqjkd';
+            $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : '';
+            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : '';
+            $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
+            $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
+            $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
             $mail->setFrom($email, $name);
-            $mail->addAddress('akshaysharma581995@gmail.com', 'Akshay');
+            $mail->addAddress('melody@melodyraejones.com', 'Melody');
             $mail->Subject = 'New Contact Form Submission';
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
             $mail->send();
-           
 
             wp_redirect(home_url('/sent'));
             exit;
@@ -166,6 +172,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
+
 
 
 //
@@ -259,11 +266,6 @@ add_action('rest_api_init', function () {
         }
     ]);
 });
-
-
-
-
-
 
 
 
@@ -385,10 +387,7 @@ add_filter('the_title', function($title, $id = null) {
     return $title;
 }, 10, 2);
 
-// First, use the correct path to include the Composer autoloader.
-// The __DIR__ constant ensures you get the directory of the current file.
-// Adjust the path if your 'vendor' directory is elsewhere.
-// require_once(__DIR__ . '/vendor/autoload.php');
+
 
 function mrj_files() {
     if (!is_page_template('page-default.php')) {
@@ -677,14 +676,22 @@ function send_new_program_email_on_publish($new_status, $old_status, $post) {
     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
     try {
+        // Fetch SMTP settings from wp-config.php
+        $smtpHost = defined('SMTP_HOST') ? SMTP_HOST : '';
+        $smtpAuth = defined('SMTP_AUTH') ? SMTP_AUTH : false;
+        $smtpUsername = defined('SMTP_USERNAME') ? SMTP_USERNAME : '';
+        $smtpPassword = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
+        $smtpSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
+        $smtpPort = defined('SMTP_PORT') ? SMTP_PORT : 25;
+
         $mail->isSMTP();
-        $mail->SMTPAuth = true;
-        $mail->Host = 'smtp.gmail.com';
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-        $mail->Username = 'akshaysharma581995@gmail.com';
-        $mail->Password = 'feulvpnfltokqjkd';
-        $mail->setFrom('akshaysharma581995@gmail.com', 'Melody');
+        $mail->SMTPAuth = $smtpAuth;
+        $mail->Host = $smtpHost;
+        $mail->SMTPSecure = $smtpSecure == 'tls' ? PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS : PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port = $smtpPort;
+        $mail->Username = $smtpUsername;
+        $mail->Password = $smtpPassword;
+        $mail->setFrom('melody@melodyraejones.com', 'Melody');
         $mail->isHTML(true);  // Set email format to HTML
 
         // Loop through each user and send the email

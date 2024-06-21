@@ -1,10 +1,13 @@
 <?php
 function mrj_enqueue_styles() {
+    error_log('Enqueueing main style.');
     wp_enqueue_style('mrj-main-style', get_stylesheet_uri());
 }
 add_action('wp_enqueue_scripts', 'mrj_enqueue_styles');
 
 function mrj_customize_register($wp_customize) {
+    error_log('Customizer: Registering sections, settings, and controls.');
+
     // Add Section for Header
     $wp_customize->add_section('mrj_header_section', array(
         'title' => __('Header Settings', 'mrj_theme'),
@@ -168,9 +171,8 @@ function mrj_customize_register($wp_customize) {
         'sanitize_callback' => 'sanitize_hex_color',
     ));
 
- 
-     // Add Control for Sign Me Up Button Link Color
-     $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_link_color', array(
+    // Add Control for Sign Me Up Button Link Color
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_link_color', array(
         'label' => __('Sign Me Up Button Link Color', 'mrj_theme'),
         'section' => 'mrj_footer_section',
         'settings' => 'mrj_signup_button_link_color',
@@ -181,17 +183,19 @@ function mrj_customize_register($wp_customize) {
         'default' => '#ffffff',
         'sanitize_callback' => 'sanitize_hex_color',
     ));
- // Add Control for Sign Me Up Button Hover Color
- $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_hover_color', array(
-    'label' => __('Sign Me Up Button Hover Color', 'mrj_theme'),
-    'section' => 'mrj_footer_section',
-    'settings' => 'mrj_signup_button_hover_color',
-)));
+    
+    // Add Control for Sign Me Up Button Hover Color
+    $wp_customize->add_control(new WP_Customize_Color_Control($wp_customize, 'mrj_signup_button_hover_color', array(
+        'label' => __('Sign Me Up Button Hover Color', 'mrj_theme'),
+        'section' => 'mrj_footer_section',
+        'settings' => 'mrj_signup_button_hover_color',
+    )));
 }
 
 add_action('customize_register', 'mrj_customize_register');
 
 function mrj_customizer_css() {
+    error_log('Applying Customizer CSS settings.');
     $header_bg_color = get_theme_mod('mrj_header_bg_color', '#ffffff');
     $header_text_color = get_theme_mod('mrj_header_text_color', '#000000');
     $header_hover_color = get_theme_mod('mrj_header_hover_color', '#6a9c07');
@@ -272,4 +276,3 @@ function mrj_customizer_css() {
 }
 add_action('wp_enqueue_scripts', 'mrj_customizer_css');
 ?>
-

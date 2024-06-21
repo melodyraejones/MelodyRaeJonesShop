@@ -129,20 +129,17 @@ footer h2 {
   width: 40px;
   height: 40px;
   line-height: 40px;
-  background-color: #fff; /* Icon background color */
   color: #643482; /* Icon text color */
   font-size: 20px;
   text-align: center;
   text-decoration: none;
   margin-right: 15px;
   box-shadow: 1px 1px 5px #555;
-  transition:
-    background-color 0.3s ease,
-    transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .social2 a:hover {
-  background-color: #ccc; /* Hover background color */
+  background-color: #6a9c07; /* Hover background color */
   transform: scale(1.1); /* Slightly increase the size on hover */
   opacity: 0.8; /* Add a bit of transparency */
 }

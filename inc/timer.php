@@ -31,8 +31,8 @@ function delete_expired_weekly_zen_posts() {
 // Add expiration time meta field on post publish
 function add_expiration_time_meta($post_id, $post, $update) {
     if ($post->post_type == 'weekly-zen' && $post->post_status == 'publish' && !$update) {
-        // $expiration_time = time() + 48 * 3600; // 48 hours from now
-        $expiration_time = time() + 60; // 48 hours from now
+         $expiration_time = time() + 48 * 3600; // 48 hours from now
+     
         update_post_meta($post_id, '_expiration_time', $expiration_time);
     }
 }
