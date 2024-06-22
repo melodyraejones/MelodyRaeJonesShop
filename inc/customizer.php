@@ -190,6 +190,42 @@ function mrj_customize_register($wp_customize) {
         'section' => 'mrj_footer_section',
         'settings' => 'mrj_signup_button_hover_color',
     )));
+ // Add Setting for Footer Icon Links
+ $wp_customize->add_setting('mrj_facebook_link', array(
+    'default' => 'http://www.facebook.com/melodyraejonesconsulting',
+    'sanitize_callback' => 'esc_url_raw',
+));
+
+$wp_customize->add_control('mrj_facebook_link', array(
+    'label' => __('Facebook Link', 'mrj_theme'),
+    'section' => 'mrj_footer_section',
+    'settings' => 'mrj_facebook_link',
+    'type' => 'url',
+));
+
+$wp_customize->add_setting('mrj_youtube_link', array(
+    'default' => 'https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g',
+    'sanitize_callback' => 'esc_url_raw',
+));
+
+$wp_customize->add_control('mrj_youtube_link', array(
+    'label' => __('YouTube Link', 'mrj_theme'),
+    'section' => 'mrj_footer_section',
+    'settings' => 'mrj_youtube_link',
+    'type' => 'url',
+));
+
+$wp_customize->add_setting('mrj_instagram_link', array(
+    'default' => 'https://www.instagram.com/yourprofile',
+    'sanitize_callback' => 'esc_url_raw',
+));
+
+$wp_customize->add_control('mrj_instagram_link', array(
+    'label' => __('Instagram Link', 'mrj_theme'),
+    'section' => 'mrj_footer_section',
+    'settings' => 'mrj_instagram_link',
+    'type' => 'url',
+));
 }
 
 add_action('customize_register', 'mrj_customize_register');

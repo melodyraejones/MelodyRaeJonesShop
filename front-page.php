@@ -83,9 +83,22 @@ get_header();
                 while ($program_query->have_posts()) : $program_query->the_post();
                     $program_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
                     $program_price = get_post_meta(get_the_ID(), 'program_price', true);
+                    $program_title = get_the_title();
                     
-                    // Add data attribute if the program is part of Mel's Faves
-                    $is_fav = has_term('mels-faves', 'program_category', get_the_ID());
+                    // Check if the program is part of 'Favorite Programs'
+                    $fav_args = array(
+                        'post_type' => 'favPrograms',
+                        'meta_query' => array(
+                            array(
+                                'key' => 'related_programs', // Meta key linking to the main program
+                                'value' => '"' . get_the_ID() . '"', // Exact match for serialized array value
+                                'compare' => 'LIKE'
+                            )
+                        )
+                    );
+                    $fav_query = new WP_Query($fav_args);
+                    $is_fav = $fav_query->have_posts(); // Check if there are any favorite programs
+                    
                     ?>
                    <div class="program" data-id="<?php echo get_the_ID(); ?>" <?php echo $is_fav ? 'data-is-fav="true"' : ''; ?>>
                         <img src="<?php echo esc_url($program_image); ?>" class="program-img" alt="<?php the_title(); ?>" />
@@ -93,20 +106,20 @@ get_header();
                             <p class="program-title"><?php the_title(); ?></p>
                           
                             <p class="program-price">Price: $<?php echo esc_html(number_format((float)$program_price, 2, '.', '')); ?></p>
-
+                            
                             <div class="button-container">
-                        
+                                <?php if ($is_fav) { ?>
+                                    <span class="fav-icon">
+                                        <i class="fas fa-heart"></i>
+                                        <span class="tooltip">Mel's Favorite Program</span>
+                                    </span>
+                                <?php } ?>
                                 <div class="icons">
-                                <!-- <span class="dashicons dashicons-plus add_to_cart" data-id="<?php echo get_the_ID(); ?>"></span> -->
-                                <a href="#" class="btn add_to_cart" data-id="<?php echo get_the_ID(); ?>">+</a>
-                               <span class="product-quantity">0</span>
-                                <!-- <span class="dashicons dashicons-minus remove_from_cart" data-id="<?php echo get_the_ID(); ?>"></span> -->
-                                <a href="#" class="btn remove_from_cart" data-id="<?php echo get_the_ID(); ?>">-</a>
-                            </div>
+                                    <a href="#" class="btn add_to_cart" data-id="<?php echo get_the_ID(); ?>">+</a>
+                                    <span class="product-quantity">0</span>
+                                    <a href="#" class="btn remove_from_cart" data-id="<?php echo get_the_ID(); ?>">-</a>
+                                </div>
                                 <a href="<?php the_permalink(); ?>" class="btn btn--full details">More Details</a>
-
-                                <!-- <a href="#" class="btn btn--full add_to_cart" data-id="<?php echo get_the_ID(); ?>">Add to Cart</a> -->
-                                <!-- <a href="#" class="btn btn--full remove_from_cart" data-id="<?php echo get_the_ID(); ?>">Remove</a> -->
                             </div>
                         </div>
                     </div>
