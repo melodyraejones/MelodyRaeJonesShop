@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>       
-        <button class="btn-mobile-nav"><span class="dashicons dashicons-menu icon-mobile-navigation" name="menu"></span><span class="dashicons dashicons-no-alt close-menu" name="close-menu"></span></button>
+        <button class="btn-mobile-nav icon-mobile-navigation"><span class="dashicons dashicons-menu" name="menu"></span><span class="dashicons dashicons-no-alt close-menu" name="close-menu"></span></button>
     </header>
 </body>
 </html>

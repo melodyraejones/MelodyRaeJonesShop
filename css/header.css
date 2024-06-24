@@ -366,20 +366,15 @@
   visibility: hidden;
   padding: 0px 0px;
   /*border-top:1px solid #fff;*/
-  -webkit-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -webkit-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -ms-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -ms-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -o-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -o-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -moz-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
 }
 
@@ -462,20 +457,15 @@
   opacity: 0;
   visibility: hidden;
   border-top: 3px solid rgba(0, 0, 0, 0.8);
-  -webkit-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -webkit-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -ms-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -ms-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -o-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -o-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  -moz-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-  box-shadow:
-    2px 2px 5px 1px rgba(0, 0, 0, 0.05),
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05),
     -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
 }
 
@@ -731,8 +721,8 @@
     font-size: 1.4rem;
   }
   .main-menu .navigation > li {
-    margin-right: 10px; /* Reduce the right margin to decrease the gap */
-    padding: 0 5px; /* Optional: Adjust padding to fine-tune spacing */
+    margin-right: 10px;
+    padding: 0 5px;
   }
 }
 @media (max-width: 59em) {
