@@ -149,8 +149,8 @@ function handle_custom_contact_form_submission() {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
             $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : 'smtp.office365.com';
-            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : 'melody@melodyraejones.com';
-            $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : 'nikita55'; // Replace with actual password
+            $mail->Username = 'akshaysharma581995@gmail.com';
+            $mail->Password = 'feulvpnfltokqjkd';
             $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
             $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
 
