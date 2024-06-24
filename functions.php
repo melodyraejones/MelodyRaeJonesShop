@@ -153,7 +153,10 @@ function handle_custom_contact_form_submission() {
             $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
             $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
             $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
-            $mail->setFrom($email, $name);
+
+            // Use a verified email address
+            $mail->setFrom('melody@melodyraejones.com', 'Melody');
+            $mail->addReplyTo($email, $name); // User's email address as reply-to
             $mail->addAddress('melody@melodyraejones.com', 'Melody');
             $mail->Subject = 'New Contact Form Submission';
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
