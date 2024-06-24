@@ -148,11 +148,11 @@ function handle_custom_contact_form_submission() {
         try {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
-            $mail->Host = 'smtp.gmail.com';
-            $mail->Username = 'akshaysharma581995@gmail.com';
-            $mail->Password = 'feulvpnfltokqjkd';
-            $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
-            $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
+            $mail->Host = 'smtp.office365.com';
+            $mail->Username = 'melody@melodyraejones.com'; // Office 365 email
+            $mail->Password = 'nikita55'; // Office 365 email password or app-specific password
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
 
             // Use the verified email address
             $mail->setFrom('melody@melodyraejones.com', 'Melody Rae Jones'); // Use the authenticated email address
@@ -176,6 +176,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
+
 
 
 
