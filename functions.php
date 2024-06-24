@@ -148,9 +148,9 @@ function handle_custom_contact_form_submission() {
         try {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
-            $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : '';
-            $mail->Username = 'melody@melodyraejones.com'; // Use your verified email
-            $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
+            $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : 'smtp.office365.com';
+            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : 'melody@melodyraejones.com';
+            $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : 'nikita55'; // Replace with actual password
             $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
             $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
 
@@ -171,15 +171,13 @@ function handle_custom_contact_form_submission() {
         }
     } else {
         // Nonce check failed
-        wp_die('Security check failed', 'Error', array( 'response' => 403 ));
+        wp_die('Security check failed', 'Error', array('response' => 403));
     }
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
-?>
 
 
-//
 
 function enqueue_dashicons_front_end() {
     wp_enqueue_style('dashicons');
