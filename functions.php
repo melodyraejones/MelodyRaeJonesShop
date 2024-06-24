@@ -149,7 +149,7 @@ function handle_custom_contact_form_submission() {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
             $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : '';
-            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : 'melody@melodyraejones.com'; 
+            $mail->Username = 'melody@melodyraejones.com'; // Use your verified email
             $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
             $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
             $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
@@ -166,6 +166,7 @@ function handle_custom_contact_form_submission() {
             exit;
         } catch (Exception $e) {
             // Output error message
+            error_log('Mailer Error: ' . $mail->ErrorInfo);
             wp_die('Mailer Error: ' . $mail->ErrorInfo);
         }
     } else {
