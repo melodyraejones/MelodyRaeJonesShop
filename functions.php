@@ -149,15 +149,15 @@ function handle_custom_contact_form_submission() {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
             $mail->Host = defined('SMTP_HOST') ? SMTP_HOST : '';
-            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : '';
+            $mail->Username = defined('SMTP_USERNAME') ? SMTP_USERNAME : 'melody@melodyraejones.com'; 
             $mail->Password = defined('SMTP_PASSWORD') ? SMTP_PASSWORD : '';
             $mail->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
             $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
 
-            // Use a verified email address
-            $mail->setFrom('melody@melodyraejones.com', 'Melody');
+            // Use the verified email address
+            $mail->setFrom('melody@melodyraejones.com', 'Melody Rae Jones'); // Use the authenticated email address
             $mail->addReplyTo($email, $name); // User's email address as reply-to
-            $mail->addAddress('melody@melodyraejones.com', 'Melody');
+            $mail->addAddress('melody@melodyraejones.com', 'Melody Rae Jones'); // Where the email will be sent
             $mail->Subject = 'New Contact Form Submission';
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
             $mail->send();
@@ -175,7 +175,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
-
+?>
 
 
 //
