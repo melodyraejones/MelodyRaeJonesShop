@@ -135,7 +135,6 @@ add_action('rest_api_init', function() {
 });
 
 
-
 function handle_custom_contact_form_submission() {
     if (isset($_POST['contact_form_nonce']) && wp_verify_nonce($_POST['contact_form_nonce'], 'custom_contact_form_action')) {
         $name = sanitize_text_field($_POST['full-name']);
@@ -154,9 +153,10 @@ function handle_custom_contact_form_submission() {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Use the verified email address
-            $mail->setFrom('melody@melodyraejones.com', 'Melody Rae Jones'); // Use the authenticated email address
-            $mail->addReplyTo($email, $name); // User's email address as reply-to
+            // Use the verified email address for the 'From' field
+            $mail->setFrom('melody@melodyraejones.com', 'Melody Rae Jones');
+            // Set the Reply-To header to the email address from the contact form
+            $mail->addReplyTo($email, $name);
             $mail->addAddress('melody@melodyraejones.com', 'Melody Rae Jones'); // Where the email will be sent
             $mail->Subject = 'New Contact Form Submission';
             $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
@@ -176,6 +176,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
+
 
 
 
