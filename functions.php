@@ -153,8 +153,8 @@ function handle_custom_contact_form_submission() {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Use the authenticated email address, but set the display name to include the user's email
-            $mail->setFrom('melody@melodyraejones.com', $name . ' <' . $email . '>');
+            // Use the authenticated email address, set the display name to the user's name
+            $mail->setFrom('melody@melodyraejones.com', $name);
             $mail->addReplyTo($email, $name); // User's email address as reply-to
             $mail->addAddress('melody@melodyraejones.com', 'Melody Rae Jones'); // Where the email will be sent
             $mail->Subject = 'New Contact Form Submission';
@@ -241,12 +241,6 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
-
-
-
-
-
-
 
 function enqueue_dashicons_front_end() {
     wp_enqueue_style('dashicons');
