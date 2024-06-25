@@ -148,18 +148,83 @@ function handle_custom_contact_form_submission() {
             $mail->isSMTP();
             $mail->SMTPAuth = true;
             $mail->Host = 'smtp.office365.com';
-            $mail->Username = 'melody@melodyraejones.com'; // Office 365 email
+            $mail->Username = 'melody@melodyraejones.com';
             $mail->Password = 'nikita55'; // Office 365 email password or app-specific password
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Use the verified email address for the 'From' field and include the user's name
-            $mail->setFrom('melody@melodyraejones.com', $name . ' via Melody Rae Jones');
-            // Set the Reply-To header to the email address from the contact form
-            $mail->addReplyTo($email, $name);
+            // Use the authenticated email address, but set the display name to include the user's email
+            $mail->setFrom('melody@melodyraejones.com', $name . ' <' . $email . '>');
+            $mail->addReplyTo($email, $name); // User's email address as reply-to
             $mail->addAddress('melody@melodyraejones.com', 'Melody Rae Jones'); // Where the email will be sent
             $mail->Subject = 'New Contact Form Submission';
-            $mail->Body = "From: $name\nEmail: $email\nSource: $source\nMessage: $message";
+
+            // Format the body to include user details in a clear format with styled HTML
+            $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        .email-container {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            border: 1px solid #ddd;
+                            border-radius: 10px;
+                            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        }
+                        .email-header {
+                            background-color: #f4f4f4;
+                            padding: 10px;
+                            text-align: center;
+                            font-size: 18px;
+                            font-weight: bold;
+                            border-bottom: 1px solid #ddd;
+                            border-radius: 10px 10px 0 0;
+                        }
+                        .email-body {
+                            padding: 20px;
+                        }
+                        .email-footer {
+                            background-color: #f4f4f4;
+                            padding: 10px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #666;
+                            border-top: 1px solid #ddd;
+                            border-radius: 0 0 10px 10px;
+                        }
+                        a {
+                            color: #1a73e8;
+                        }
+                        .email-body p {
+                            margin: 10px 0;
+                        }
+                        .email-body strong {
+                            display: inline-block;
+                            width: 100px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='email-container'>
+                        <div class='email-header'>New Contact Form Submission</div>
+                        <div class='email-body'>
+                            <p><strong>From:</strong> $name &lt;$email&gt;</p>
+                            <p><strong>Source:</strong> $source</p>
+                            <p><strong>Message:</strong><br>$message</p>
+                        </div>
+                        <div class='email-footer'>
+                            <p>This is an automated message. Please do not reply.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";
+            $mail->isHTML(true);  // Set email format to HTML
+
             $mail->send();
 
             wp_redirect(home_url('/sent'));
@@ -176,6 +241,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
+
 
 
 
