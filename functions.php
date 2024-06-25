@@ -153,8 +153,8 @@ function handle_custom_contact_form_submission() {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Use the verified email address for the 'From' field
-            $mail->setFrom('melody@melodyraejones.com', 'Melody Rae Jones');
+            // Use the verified email address for the 'From' field and include the user's name
+            $mail->setFrom('melody@melodyraejones.com', $name . ' via Melody Rae Jones');
             // Set the Reply-To header to the email address from the contact form
             $mail->addReplyTo($email, $name);
             $mail->addAddress('melody@melodyraejones.com', 'Melody Rae Jones'); // Where the email will be sent
@@ -176,6 +176,7 @@ function handle_custom_contact_form_submission() {
 }
 add_action('admin_post_nopriv_custom_contact_form', 'handle_custom_contact_form_submission');
 add_action('admin_post_custom_contact_form', 'handle_custom_contact_form_submission');
+
 
 
 
