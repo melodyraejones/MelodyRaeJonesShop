@@ -190,42 +190,57 @@ function mrj_customize_register($wp_customize) {
         'section' => 'mrj_footer_section',
         'settings' => 'mrj_signup_button_hover_color',
     )));
- // Add Setting for Footer Icon Links
- $wp_customize->add_setting('mrj_facebook_link', array(
-    'default' => 'http://www.facebook.com/melodyraejonesconsulting',
-    'sanitize_callback' => 'esc_url_raw',
-));
+    
+    // Add Setting for Quick Links
+    $wp_customize->add_setting('mrj_quick_links', array(
+        'default' => 'https://example.com/link1|Link 1,https://example.com/link2|Link 2',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
 
-$wp_customize->add_control('mrj_facebook_link', array(
-    'label' => __('Facebook Link', 'mrj_theme'),
-    'section' => 'mrj_footer_section',
-    'settings' => 'mrj_facebook_link',
-    'type' => 'url',
-));
+    // Add Control for Quick Links
+    $wp_customize->add_control('mrj_quick_links', array(
+        'label' => __('Quick Links (comma separated URLs and Labels)', 'mrj_theme'),
+        'section' => 'mrj_footer_section',
+        'settings' => 'mrj_quick_links',
+        'type' => 'textarea',
+    ));
+    
+    // Add Setting for Footer Icon Links
+    $wp_customize->add_setting('mrj_facebook_link', array(
+        'default' => 'http://www.facebook.com/melodyraejonesconsulting',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
 
-$wp_customize->add_setting('mrj_youtube_link', array(
-    'default' => 'https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g',
-    'sanitize_callback' => 'esc_url_raw',
-));
+    $wp_customize->add_control('mrj_facebook_link', array(
+        'label' => __('Facebook Link', 'mrj_theme'),
+        'section' => 'mrj_footer_section',
+        'settings' => 'mrj_facebook_link',
+        'type' => 'url',
+    ));
 
-$wp_customize->add_control('mrj_youtube_link', array(
-    'label' => __('YouTube Link', 'mrj_theme'),
-    'section' => 'mrj_footer_section',
-    'settings' => 'mrj_youtube_link',
-    'type' => 'url',
-));
+    $wp_customize->add_setting('mrj_youtube_link', array(
+        'default' => 'https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
 
-$wp_customize->add_setting('mrj_instagram_link', array(
-    'default' => 'https://www.instagram.com/yourprofile',
-    'sanitize_callback' => 'esc_url_raw',
-));
+    $wp_customize->add_control('mrj_youtube_link', array(
+        'label' => __('YouTube Link', 'mrj_theme'),
+        'section' => 'mrj_footer_section',
+        'settings' => 'mrj_youtube_link',
+        'type' => 'url',
+    ));
 
-$wp_customize->add_control('mrj_instagram_link', array(
-    'label' => __('Instagram Link', 'mrj_theme'),
-    'section' => 'mrj_footer_section',
-    'settings' => 'mrj_instagram_link',
-    'type' => 'url',
-));
+    $wp_customize->add_setting('mrj_instagram_link', array(
+        'default' => 'https://www.instagram.com/yourprofile',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+
+    $wp_customize->add_control('mrj_instagram_link', array(
+        'label' => __('Instagram Link', 'mrj_theme'),
+        'section' => 'mrj_footer_section',
+        'settings' => 'mrj_instagram_link',
+        'type' => 'url',
+    ));
 }
 
 add_action('customize_register', 'mrj_customize_register');
@@ -288,13 +303,13 @@ function mrj_customizer_css() {
         footer.main-footer .contact-info li a {
             color: {$footer_text_color} !important;
         }
-      .theme-btn.btn-style-two {
+        .theme-btn.btn-style-two {
             background-color: {$signup_button_bg_color} !important;
             color: {$signup_button_link_color} !important;
         }
-      .theme-btn.btn-style-two:hover {
-            background-color: {$signup_button_hover_color} !important; // Modify this line
-            color: {$signup_button_link_color} !important; // Keep the link color the same on hover
+        .theme-btn.btn-style-two:hover {
+            background-color: {$signup_button_hover_color} !important;
+            color: {$signup_button_link_color} !important;
         }
         .footer-bottom {
             background-color: {$footer_bottom_bg_color} !important;

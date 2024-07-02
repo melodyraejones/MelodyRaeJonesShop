@@ -12,19 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
   let introAudio = document.getElementById("intro-audio");
   let mainAudio = document.getElementById("main-audio");
   let disclaimerAudio = document.getElementById("disclaimer-audio");
+  let optionalAudio = document.getElementById("optional-audio");
   let playBtn = document.querySelector(".playIcon");
   let forwardBtn = document.querySelector(".dashicons-controls-forward");
   let backwardBtn = document.querySelector(".dashicons-controls-back");
   let ctrlIcon = document.querySelector("#ctrlIcon");
   let backBtn = document.querySelector(".back");
-  // Only run the script if the page has audio controls
 
+  // Only run the script if the page has audio controls
   backBtn.addEventListener("click", () => {
     let url = backBtn.getAttribute("data-url");
     window.location.href = url;
   });
-  if (introAudio && mainAudio && disclaimerAudio && ctrlIcon) {
-    let currentAudio = introAudio; // Start with intro audio as the default
+  if ((introAudio || mainAudio || disclaimerAudio || optionalAudio) && ctrlIcon) {
+    let currentAudio = introAudio || mainAudio || disclaimerAudio || optionalAudio; // Start with the first available audio as the default
 
     function updateProgress() {
       progress.max = currentAudio.duration;
@@ -73,20 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function switchAudio(direction) {
       removeAudioListeners(); // Remove event listeners from the current audio
       currentAudio.pause();
+      const audioOrder = [introAudio, mainAudio, disclaimerAudio, optionalAudio].filter(Boolean);
+      const currentIndex = audioOrder.indexOf(currentAudio);
       if (direction === "forward") {
-        if (currentAudio === introAudio) currentAudio = mainAudio;else if (currentAudio === mainAudio) currentAudio = disclaimerAudio;else if (currentAudio === disclaimerAudio) currentAudio = introAudio;
+        currentAudio = audioOrder[(currentIndex + 1) % audioOrder.length];
       } else {
-        if (currentAudio === introAudio) currentAudio = disclaimerAudio;else if (currentAudio === mainAudio) currentAudio = introAudio;else if (currentAudio === disclaimerAudio) currentAudio = mainAudio;
+        currentAudio = audioOrder[(currentIndex - 1 + audioOrder.length) % audioOrder.length];
       }
       addAudioListeners(); // Add event listeners to the new current audio
       updateProgress(); // Update progress bar to match new audio
       currentAudio.play(); // Play the new audio
     }
   }
-});
-document.addEventListener("DOMContentLoaded", function () {
-  // Select the hamburger menu icon
-  const menuIcon = document.querySelector(".dashicons-download");
 
   // Function to download a file
   function downloadFile(url, fileName) {
@@ -99,11 +98,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Attach click event to the menu icon
+  const menuIcon = document.querySelector(".dashicons-download");
   menuIcon.addEventListener("click", function () {
     // Get audio elements
     const introAudio = document.querySelector("#intro-audio source");
     const mainAudio = document.querySelector("#main-audio source");
     const disclaimerAudio = document.querySelector("#disclaimer-audio source");
+    const optionalAudio = document.querySelector("#optional-audio source");
 
     // Download audio files if they exist
     if (introAudio) {
@@ -114,6 +115,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     if (disclaimerAudio) {
       downloadFile(disclaimerAudio.src, "disclaimer_audio.mp3");
+    }
+    if (optionalAudio) {
+      downloadFile(optionalAudio.src, "optional_audio.mp3");
     }
   });
 });
@@ -4859,6 +4863,24 @@ const btnNavEl = document.querySelector(".btn-mobile-nav");
 const headerEl = document.querySelector(".main-header");
 btnNavEl.addEventListener("click", function () {
   headerEl.classList.toggle("nav-open");
+});
+document.addEventListener("DOMContentLoaded", function () {
+  var downloadLink = document.getElementById("auto-download-link");
+  if (downloadLink) {
+    downloadLink.click();
+  }
+  var audioElements = document.querySelectorAll(".music-player audio");
+  audioElements.forEach(function (audio) {
+    audio.addEventListener("play", function () {
+      document.querySelector(".audio-title-container").classList.add("playing");
+    });
+    audio.addEventListener("pause", function () {
+      document.querySelector(".audio-title-container").classList.remove("playing");
+    });
+    audio.addEventListener("ended", function () {
+      document.querySelector(".audio-title-container").classList.remove("playing");
+    });
+  });
 });
 })();
 

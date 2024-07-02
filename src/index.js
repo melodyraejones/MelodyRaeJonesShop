@@ -24,3 +24,27 @@ const headerEl = document.querySelector(".main-header");
 btnNavEl.addEventListener("click", function () {
   headerEl.classList.toggle("nav-open");
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  var downloadLink = document.getElementById("auto-download-link");
+  if (downloadLink) {
+    downloadLink.click();
+  }
+
+  var audioElements = document.querySelectorAll(".music-player audio");
+  audioElements.forEach(function (audio) {
+    audio.addEventListener("play", function () {
+      document.querySelector(".audio-title-container").classList.add("playing");
+    });
+    audio.addEventListener("pause", function () {
+      document
+        .querySelector(".audio-title-container")
+        .classList.remove("playing");
+    });
+    audio.addEventListener("ended", function () {
+      document
+        .querySelector(".audio-title-container")
+        .classList.remove("playing");
+    });
+  });
+});

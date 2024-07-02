@@ -29,11 +29,14 @@
                     <h2>Quick Links</h2>
                     <div class="widget-content">
                         <ul class="list" style="margin-left:10px">
-                            <li><a href="https://calendly.com/melody_rae_jones/personal-session" target="_blank">Book a Personal Session</a></li>
-                            <li><a href="https://melodyraejones.com/contact/discovery-session/" target="_blank">Request a Discovery Session</a></li>
-                            <li><a href="products/free_resources.html">Free Resources</a></li>
-                            <li><a href="events/upcoming.html">Upcoming Events</a></li>
-                            <li><a href="members/login.html">Member Login</a></li>
+                            <?php
+                            $quick_links = get_theme_mod('mrj_quick_links', ''); 
+                            $quick_links = explode(',', $quick_links);
+                            foreach ($quick_links as $link) {
+                                list($url, $label) = explode('|', $link);
+                                echo '<li><a href="' . esc_url($url) . '" target="_blank">' . esc_html($label) . '</a></li>';
+                            }
+                            ?>
                         </ul>                                        
                     </div>
                 </div>
@@ -43,9 +46,22 @@
                     <h2>Follow Me</h2>
                     <div class="text">
                         <div class="social2" style="margin-top:-10px"><br />
-                            <a href="http://www.facebook.com/melodyraejonesconsulting" title="Find me on Facebook" target="_blank" style="text-decoration:none"><i class="icon-facebook-squared"></i></a> 
-                            <a href="https://www.youtube.com/channel/UCMfqdYeo2dotWq4HTR9ip8g" title="Check out my Youtube Channel" target="_blank" style="text-decoration:none"><i class="icon-youtube"></i></a>
-                            <a href="https://www.instagram.com/yourprofile" title="Follow me on Instagram" target="_blank" style="text-decoration:none"><i class="icon-instagram"></i></a>
+                            <?php
+                            $social_links = array(
+                                'facebook' => get_theme_mod('mrj_facebook_link', ''),
+                                'youtube' => get_theme_mod('mrj_youtube_link', ''),
+                                'instagram' => get_theme_mod('mrj_instagram_link', '')
+                            );
+                            if ($social_links['facebook']) {
+                                echo '<a href="' . esc_url($social_links['facebook']) . '" title="Find me on Facebook" target="_blank" style="text-decoration:none"><i class="icon-facebook-squared"></i></a>';
+                            }
+                            if ($social_links['youtube']) {
+                                echo '<a href="' . esc_url($social_links['youtube']) . '" title="Check out my Youtube Channel" target="_blank" style="text-decoration:none"><i class="icon-youtube"></i></a>';
+                            }
+                            if ($social_links['instagram']) {
+                                echo '<a href="' . esc_url($social_links['instagram']) . '" title="Follow me on Instagram" target="_blank" style="text-decoration:none"><i class="icon-instagram"></i></a>';
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>

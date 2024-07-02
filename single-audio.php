@@ -46,41 +46,57 @@ if (is_user_logged_in()) {
             $intro_audio_url = get_field('intro_audio');
             $main_audio_url = get_field('audio_file');
             $disclaimer_audio_url = get_field('disclaimer_audio');
+            $optional_audio_url = get_field('additional_audio'); 
+
             ?>
             <section class="section-audios">
+                <!-- Adding planets to the background -->
+                <div class="planet planet1"></div> <!-- Jupiter -->
+                <div class="planet planet2"></div>
+
                 <article class="audio-content" id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
                     <div class="entry-content">
                         <?php the_content(); ?>
                     </div>
                     <div class="container">
                         <div class="music-player">
-                        <nav>
-                        <div class="circle back" data-url="<?php echo home_url('/audio-files/'); ?>">
-                            <span class="dashicons dashicons-arrow-left-alt2"></span>
-                        </div>
-                        <div class="circle">
-                        <span class="dashicons dashicons-download"></span>
-                        </div>
-                    </nav>
+                            <nav>
+                                <div class="circle back" data-url="<?php echo home_url('/audio-files/'); ?>">
+                                    <span class="dashicons dashicons-arrow-left-alt2"></span>
+                                </div>
+                                <div class="circle">
+                                    <?php if ($main_audio_url): ?>
+                                        <a id="download-link" href="<?php echo esc_url($main_audio_url); ?>" download>
+                                            <span class="dashicons dashicons-download"></span>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </nav>
                             <!-- Display and controls for the audio files -->
                             <img class="audio-image" src="<?php echo get_theme_file_uri('./images/checkout.jpg'); ?>" alt="audio-file">
-                            <h1><?php the_title(); ?></h1>
+                            <h1 class="audio-title-container"><span class="audio-title"><?php the_title(); ?></span></h1>
                             <p>Melody Rae Jones</p>
                             <?php if ($intro_audio_url): ?>
-                                <audio id="intro-audio" >
+                                <audio id="intro-audio">
                                     <source src="<?php echo esc_url($intro_audio_url); ?>" type="audio/mpeg">
                                     Your browser does not support the audio element.
                                 </audio>
                             <?php endif; ?>
                             <?php if ($main_audio_url): ?>
-                                <audio id="main-audio" >
+                                <audio id="main-audio">
                                     <source src="<?php echo esc_url($main_audio_url); ?>" type="audio/mpeg">
                                     Your browser does not support the audio element.
                                 </audio>
                             <?php endif; ?>
                             <?php if ($disclaimer_audio_url): ?>
-                                <audio id="disclaimer-audio" >
+                                <audio id="disclaimer-audio">
                                     <source src="<?php echo esc_url($disclaimer_audio_url); ?>" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            <?php endif; ?>
+                            <?php if ($optional_audio_url): ?>
+                                <audio id="optional-audio">
+                                    <source src="<?php echo esc_url($optional_audio_url); ?>" type="audio/mpeg">
                                     Your browser does not support the audio element.
                                 </audio>
                             <?php endif; ?>
@@ -104,3 +120,4 @@ if (is_user_logged_in()) {
 }
 
 get_footer();
+?>
