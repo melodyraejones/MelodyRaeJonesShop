@@ -60,7 +60,9 @@
   column-gap: 3.2rem;
   row-gap: 2.4rem;
 }
-
+.nf-before-form-content {
+  color: #000;
+}
 .nf-field label {
   display: block;
   font-size: 1.6rem;
