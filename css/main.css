@@ -59,6 +59,60 @@ a:visited {
   outline: none;
 }
 
+/* Custom Ninja Forms Styles */
+
+/* Adjust margins */
+.ninja-forms-form {
+  margin-left: 10%; /* Adjust as needed to line up with HOME button */
+  margin-right: 10%; /* Ensure same amount of white space on both sides */
+}
+
+/* Style the form title/header */
+.ninja-forms-title {
+  font-family: "AvantGarde", sans-serif;
+  font-size: 24px;
+  color: #6a9c07;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Style form fields */
+.ninja-forms-field {
+  margin-bottom: 15px;
+}
+
+.ninja-forms-field label {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.ninja-forms-field input,
+.ninja-forms-field select,
+.ninja-forms-field textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px; /* Larger text size */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Style the submit button */
+.ninja-forms-field input[type="submit"] {
+  background-color: #6a9c07;
+  color: #fff;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ninja-forms-field input[type="submit"]:hover {
+  background-color: #5b8c05;
+}
+
 /* Login page */
 
 #login {
