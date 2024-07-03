@@ -23,36 +23,37 @@ Template Name: Default Page
         }
         /* Apply some basic styling */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "Arimo", sans-serif;
             line-height: 1.6;
+            background-color: #ffffff; /* Optional: set a background color */
+            margin-left: 5%; /* Adjust margins as needed */
+            margin-right: 5%;
         }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: inherit !important;
-            color: inherit !important;
-            margin: 0;
+        h1 {
+            font-family: "AvanteGarde", sans-serif;
+            font-size: 24px;
+            color: #6a9c07;
+            margin-top: 20px; /* Add some space above the title */
+            text-align: center; /* Center align the title */
         }
         p, div, span, a {
-            font-family: inherit !important;
-            color: inherit !important;
+            font-family: "Arimo", sans-serif;
+            font-size: 18px;
+            color: #333;
             margin: 0;
             padding: 0;
         }
-        /* Ensure no gap from the header */
-        .site-header {
-            margin: 0;
-            padding: 0;
+        .site-header, .site-footer {
+            margin: 0 auto;
+            width: 90%;
         }
         .site-content {
-            flex: 1;  /* Allow the content to grow and fill the available space */
-            padding: 20px;  /* Optional, add some padding for the content */
-            height: auto !important;  /* Override the height to remove extra space */
-            min-height: 0 !important;  /* Override the min-height to remove extra space */
+            flex: 1;
+            padding: 20px;
+            margin: 0 auto;
+            width: 90%;
         }
-        .site-footer {
-            margin: 0;
-            padding: 20px;  /* Optional, adjust as needed */
-            background-color: #f4f4f4;  /* Optional, add background color for visibility */
-        }
+        /* Optional: Add additional styling as needed */
     </style>
 </head>
 <body <?php body_class(); ?>>
@@ -63,11 +64,12 @@ Template Name: Default Page
             <?php
             while (have_posts()) :
                 the_post();
+                echo '<h1>' . get_the_title() . '</h1>';
                 the_content();
             endwhile;
             ?>
-        </main><!-- #main -->
-    </div><!-- #content -->
+        </main>
+    </div>
 
     <?php get_footer(); ?>
 
