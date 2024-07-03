@@ -123,3 +123,9 @@
   border-radius: 11px;
   min-height: 400px;
 }
+.nf-form-title {
+  display: none;
+}
+.nf-form-fields-required {
+  color: #562973;
+}
