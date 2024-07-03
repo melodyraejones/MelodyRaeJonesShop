@@ -1,0 +1,106 @@
+/* Custom Ninja Forms Styles */
+
+/* Adjust margins */
+.ninja-forms-form-wrap {
+  margin-left: 10%; /* Adjust to align with HOME button */
+  margin-right: 10%; /* Ensure same white space on both sides */
+}
+
+/* Remove the border around the page */
+.ninja-forms-form-wrap,
+.nf-form-layout {
+  border: none;
+  box-shadow: none;
+}
+
+/* Style the form title/header */
+.nf-form-title {
+  font-family: "AvantGarde", sans-serif;
+  font-size: 24px;
+  color: #6a9c07;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Apply provided styles */
+.section-cta {
+  padding: 9.6rem 0;
+}
+.cta-contact {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.015);
+  background-color: rgba(100, 52, 130, 0.25);
+  border-radius: 11px;
+  background-image: linear-gradient(
+    to right bottom rgba(131, 93, 155, 0.11),
+    rgba(100, 52, 130, 0.11)
+  );
+}
+.cta-text-box-contact {
+  padding: 4.8rem 6.4rem;
+  color: #28133abd;
+  font-size: 1.6rem;
+}
+.nf-form-title {
+  color: inherit;
+  margin-bottom: 3.2rem;
+  font-size: 2.6rem;
+  text-align: center;
+}
+.cta-text {
+  font-size: 1.8rem;
+  line-height: 1.8;
+  margin-bottom: 4.8rem;
+}
+.nf-form-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 3.2rem;
+  row-gap: 2.4rem;
+}
+
+.nf-field label {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+.nf-field input,
+.nf-field select,
+.nf-field textarea {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1.4rem;
+  font-family: inherit;
+  color: inherit;
+  border: none;
+  background-color: #42235e4d;
+  border-radius: 9px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.nf-field input::placeholder,
+.nf-field textarea::placeholder {
+  color: #ffffff8a;
+}
+.nf-field textarea {
+  color: #fff;
+}
+.nf-field select {
+  color: #ffffff8a;
+}
+
+.nf-field input[type="submit"] {
+  font-family: inherit;
+  background-color: #28133abd;
+  padding: 1.2rem;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nf-field input[type="submit"]:hover {
+  background-color: #5b8c05;
+}

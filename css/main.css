@@ -24,6 +24,7 @@
 @import url("archive-weekly-zen.css");
 @import url("index.css");
 @import url("timer.css");
+@import url("ninja-form.css");
 
 * {
   margin: 0px;
@@ -57,69 +58,6 @@ a:focus,
 a:visited {
   text-decoration: none;
   outline: none;
-}
-
-/* ninja-forms-custom.css */
-
-/* Custom Ninja Forms Styles */
-
-/* Adjust margins */
-.ninja-forms-form-wrap {
-  margin-left: 10%; /* Adjust to align with HOME button */
-  margin-right: 10%; /* Ensure same white space on both sides */
-}
-
-/* Remove the border around the page */
-.ninja-forms-form-wrap,
-.nf-form-layout {
-  border: none;
-  box-shadow: none;
-}
-
-/* Style the form title/header */
-.nf-form-title {
-  font-family: "AvantGarde", sans-serif;
-  font-size: 24px;
-  color: #6a9c07;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* Style form fields */
-.nf-field {
-  margin-bottom: 15px;
-}
-
-.nf-field label {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 5px;
-  display: block;
-}
-
-.nf-field input,
-.nf-field select,
-.nf-field textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 18px; /* Larger text size */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-/* Style the submit button */
-.nf-field input[type="submit"] {
-  background-color: #6a9c07;
-  color: #fff;
-  border: none;
-  padding: 15px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.nf-field input[type="submit"]:hover {
-  background-color: #5b8c05;
 }
 
 /* Login page */
