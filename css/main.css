@@ -59,16 +59,25 @@ a:visited {
   outline: none;
 }
 
+/* ninja-forms-custom.css */
+
 /* Custom Ninja Forms Styles */
 
 /* Adjust margins */
-.ninja-forms-form {
-  margin-left: 10%; /* Adjust as needed to line up with HOME button */
-  margin-right: 10%; /* Ensure same amount of white space on both sides */
+.ninja-forms-form-wrap {
+  margin-left: 10%; /* Adjust to align with HOME button */
+  margin-right: 10%; /* Ensure same white space on both sides */
+}
+
+/* Remove the border around the page */
+.ninja-forms-form-wrap,
+.nf-form-layout {
+  border: none;
+  box-shadow: none;
 }
 
 /* Style the form title/header */
-.ninja-forms-title {
+.nf-form-title {
   font-family: "AvantGarde", sans-serif;
   font-size: 24px;
   color: #6a9c07;
@@ -77,20 +86,20 @@ a:visited {
 }
 
 /* Style form fields */
-.ninja-forms-field {
+.nf-field {
   margin-bottom: 15px;
 }
 
-.ninja-forms-field label {
+.nf-field label {
   font-size: 18px;
   color: #333;
   margin-bottom: 5px;
   display: block;
 }
 
-.ninja-forms-field input,
-.ninja-forms-field select,
-.ninja-forms-field textarea {
+.nf-field input,
+.nf-field select,
+.nf-field textarea {
   width: 100%;
   padding: 10px;
   font-size: 18px; /* Larger text size */
@@ -100,7 +109,7 @@ a:visited {
 }
 
 /* Style the submit button */
-.ninja-forms-field input[type="submit"] {
+.nf-field input[type="submit"] {
   background-color: #6a9c07;
   color: #fff;
   border: none;
@@ -109,7 +118,7 @@ a:visited {
   transition: background-color 0.3s ease;
 }
 
-.ninja-forms-field input[type="submit"]:hover {
+.nf-field input[type="submit"]:hover {
   background-color: #5b8c05;
 }
 
