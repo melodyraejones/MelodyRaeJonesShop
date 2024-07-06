@@ -15,7 +15,7 @@ class MyCart {
     axios.defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
     this.cartItems = [];
     this.events();
-    this.loadCartItems();
+
     if (window.location.href.includes("/shop/cart/")) {
       this.loadCartItems();
       this.updateTotalOnBackend();

@@ -1,13 +1,11 @@
 <?php
 function mrj_enqueue_styles() {
-    error_log('Enqueueing main style.');
     wp_enqueue_style('mrj-main-style', get_stylesheet_uri());
+    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 }
 add_action('wp_enqueue_scripts', 'mrj_enqueue_styles');
 
 function mrj_customize_register($wp_customize) {
-    error_log('Customizer: Registering sections, settings, and controls.');
-
     // Add Section for Header
     $wp_customize->add_section('mrj_header_section', array(
         'title' => __('Header Settings', 'mrj_theme'),
@@ -246,7 +244,6 @@ function mrj_customize_register($wp_customize) {
 add_action('customize_register', 'mrj_customize_register');
 
 function mrj_customizer_css() {
-    error_log('Applying Customizer CSS settings.');
     $header_bg_color = get_theme_mod('mrj_header_bg_color', '#ffffff');
     $header_text_color = get_theme_mod('mrj_header_text_color', '#000000');
     $header_hover_color = get_theme_mod('mrj_header_hover_color', '#6a9c07');
