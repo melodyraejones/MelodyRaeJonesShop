@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let backBtn = document.querySelector(".back");
 
   // Only run the script if the page has audio controls
-  backBtn.addEventListener("click", () => {
+
+  backBtn?.addEventListener("click", () => {
     let url = backBtn.getAttribute("data-url");
     window.location.href = url;
   });
@@ -99,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Attach click event to the menu icon
   const menuIcon = document.querySelector(".dashicons-download");
-  menuIcon.addEventListener("click", function () {
+  menuIcon?.addEventListener("click", function () {
     // Get audio elements
     const introAudio = document.querySelector("#intro-audio source");
     const mainAudio = document.querySelector("#main-audio source");
@@ -139,37 +140,38 @@ __webpack_require__.r(__webpack_exports__);
 
 class MyCart {
   constructor() {
-    this.detailBtn = document.querySelector(".add_to_cart_details");
-    if (this.detailBtn) {
-      this.detailBtn.addEventListener("click", e => {
-        e.preventDefault(); // Prevent default link action
-        this.addProductFromDetails(this.detailBtn);
-      });
-    }
-    this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
-    this.productQty = document.querySelectorAll(".product-quantity");
-    this.cartBadge = document.querySelector(".cart-badge");
-    axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
-    this.cartItems = [];
-    this.events();
-    this.loadCartItems();
-    if (window.location.href.includes("/shop/cart/")) {
-      this.loadCartItems();
-      this.updateTotalOnBackend();
-      this.payButton = document.querySelector(".pay-button");
-      if (this.payButton) {
-        this.payButton.addEventListener("click", event => {
-          event.preventDefault(); // Prevent form submission
-          this.checkout();
+    document.addEventListener("DOMContentLoaded", () => {
+      this.detailBtn = document.querySelector(".add_to_cart_details");
+      if (this.detailBtn) {
+        this.detailBtn.addEventListener("click", e => {
+          e.preventDefault(); // Prevent default link action
+          this.addProductFromDetails(this.detailBtn);
         });
       }
-      this.initializeCart();
-    }
-    // Ensure the notification element is present
-    this.notification = document.getElementById("notification");
-    if (!this.notification) {
-      console.error("Notification element not found.");
-    }
+      this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
+      this.productQty = document.querySelectorAll(".product-quantity");
+      this.cartBadge = document.querySelector(".cart-badge");
+      axios__WEBPACK_IMPORTED_MODULE_0__["default"].defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
+      this.cartItems = [];
+      this.events();
+      if (window.location.href.includes("/shop/cart/")) {
+        this.loadCartItems();
+        this.updateTotalOnBackend();
+        this.payButton = document.querySelector(".pay-button");
+        if (this.payButton) {
+          this.payButton.addEventListener("click", event => {
+            event.preventDefault(); // Prevent form submission
+            this.checkout();
+          });
+        }
+        this.initializeCart();
+      }
+      // Ensure the notification element is present
+      this.notification = document.getElementById("notification");
+      if (!this.notification) {
+        return;
+      }
+    });
   }
   events() {
     const cartButtons = document.querySelectorAll(".add_to_cart");

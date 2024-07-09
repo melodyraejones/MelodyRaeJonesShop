@@ -2,37 +2,39 @@ import axios from "axios";
 
 class MyCart {
   constructor() {
-    this.detailBtn = document.querySelector(".add_to_cart_details");
-    if (this.detailBtn) {
-      this.detailBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // Prevent default link action
-        this.addProductFromDetails(this.detailBtn);
-      });
-    }
-    this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
-    this.productQty = document.querySelectorAll(".product-quantity");
-    this.cartBadge = document.querySelector(".cart-badge");
-    axios.defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
-    this.cartItems = [];
-    this.events();
-
-    if (window.location.href.includes("/shop/cart/")) {
-      this.loadCartItems();
-      this.updateTotalOnBackend();
-      this.payButton = document.querySelector(".pay-button");
-      if (this.payButton) {
-        this.payButton.addEventListener("click", (event) => {
-          event.preventDefault(); // Prevent form submission
-          this.checkout();
+    document.addEventListener("DOMContentLoaded", () => {
+      this.detailBtn = document.querySelector(".add_to_cart_details");
+      if (this.detailBtn) {
+        this.detailBtn.addEventListener("click", (e) => {
+          e.preventDefault(); // Prevent default link action
+          this.addProductFromDetails(this.detailBtn);
         });
       }
-      this.initializeCart();
-    }
-    // Ensure the notification element is present
-    this.notification = document.getElementById("notification");
-    if (!this.notification) {
-      console.error("Notification element not found.");
-    }
+      this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
+      this.productQty = document.querySelectorAll(".product-quantity");
+      this.cartBadge = document.querySelector(".cart-badge");
+      axios.defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
+      this.cartItems = [];
+      this.events();
+
+      if (window.location.href.includes("/shop/cart/")) {
+        this.loadCartItems();
+        this.updateTotalOnBackend();
+        this.payButton = document.querySelector(".pay-button");
+        if (this.payButton) {
+          this.payButton.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent form submission
+            this.checkout();
+          });
+        }
+        this.initializeCart();
+      }
+      // Ensure the notification element is present
+      this.notification = document.getElementById("notification");
+      if (!this.notification) {
+        return;
+      }
+    });
   }
 
   events() {
@@ -313,6 +315,7 @@ class MyCart {
   updateCartUI() {
     const cartItemsContainer = document.getElementById("cart-items");
     const cartTotalElement = document.getElementById("cart-total");
+
     if (this.cartItems.length === 0) {
       // If the cart is empty, display a message and a link to continue shopping
       cartItemsContainer.innerHTML = `

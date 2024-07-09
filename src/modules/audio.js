@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let backBtn = document.querySelector(".back");
 
   // Only run the script if the page has audio controls
-  backBtn.addEventListener("click", () => {
+
+  backBtn?.addEventListener("click", () => {
     let url = backBtn.getAttribute("data-url");
     window.location.href = url;
   });
@@ -116,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Attach click event to the menu icon
   const menuIcon = document.querySelector(".dashicons-download");
-  menuIcon.addEventListener("click", function () {
+  menuIcon?.addEventListener("click", function () {
     // Get audio elements
     const introAudio = document.querySelector("#intro-audio source");
     const mainAudio = document.querySelector("#main-audio source");
