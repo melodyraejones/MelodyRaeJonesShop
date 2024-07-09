@@ -2,65 +2,109 @@ import axios from "axios";
 
 class MyCart {
   constructor() {
-    document.addEventListener("DOMContentLoaded", () => {
-      this.detailBtn = document.querySelector(".add_to_cart_details");
-      if (this.detailBtn) {
-        this.detailBtn.addEventListener("click", (e) => {
-          e.preventDefault(); // Prevent default link action
-          this.addProductFromDetails(this.detailBtn);
+    this.debounce = this.debounce.bind(this); // Bind debounce to the class instance
+    this.handleDOMContentLoaded = this.handleDOMContentLoaded.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
+
+    document.addEventListener("DOMContentLoaded", this.handleDOMContentLoaded);
+    window.addEventListener("beforeunload", this.cleanUp);
+  }
+
+  handleDOMContentLoaded() {
+    this.detailBtn = document.querySelector(".add_to_cart_details");
+    if (this.detailBtn) {
+      this.detailBtn.addEventListener("click", (e) => {
+        e.preventDefault(); // Prevent default link action
+        this.addProductFromDetails(this.detailBtn);
+      });
+    }
+    this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
+    this.productQty = document.querySelectorAll(".product-quantity");
+    this.cartBadge = document.querySelector(".cart-badge");
+    axios.defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
+    this.cartItems = [];
+    this.events();
+
+    if (window.location.href.includes("/shop/cart/")) {
+      this.loadCartItems();
+      this.updateTotalOnBackend();
+      this.payButton = document.querySelector(".pay-button");
+      if (this.payButton) {
+        this.payButton.addEventListener("click", (event) => {
+          event.preventDefault(); // Prevent form submission
+          this.checkout();
         });
       }
-      this.cartRemoveButtons = document.querySelectorAll(".remove_from_cart");
-      this.productQty = document.querySelectorAll(".product-quantity");
-      this.cartBadge = document.querySelector(".cart-badge");
-      axios.defaults.headers.common["X-WP-Nonce"] = mrjData.nonce;
-      this.cartItems = [];
-      this.events();
+      this.initializeCart();
+    }
+    // Ensure the notification element is present
+    this.notification = document.getElementById("notification");
+    if (!this.notification) {
+      return;
+    }
+  }
 
-      if (window.location.href.includes("/shop/cart/")) {
-        this.loadCartItems();
-        this.updateTotalOnBackend();
-        this.payButton = document.querySelector(".pay-button");
-        if (this.payButton) {
-          this.payButton.addEventListener("click", (event) => {
-            event.preventDefault(); // Prevent form submission
-            this.checkout();
-          });
-        }
-        this.initializeCart();
-      }
-      // Ensure the notification element is present
-      this.notification = document.getElementById("notification");
-      if (!this.notification) {
-        return;
-      }
-    });
+  cleanUp() {
+    if (this.detailBtn) {
+      this.detailBtn.removeEventListener("click", this.addProductFromDetails);
+    }
+
+    if (this.cartRemoveButtons) {
+      this.cartRemoveButtons.forEach((button) => {
+        button.removeEventListener("click", this.removeItemFromCart);
+      });
+    }
+
+    if (this.payButton) {
+      this.payButton.removeEventListener("click", this.checkout);
+    }
+
+    document.removeEventListener(
+      "DOMContentLoaded",
+      this.handleDOMContentLoaded
+    );
+    window.removeEventListener("beforeunload", this.cleanUp);
+  }
+
+  //debounce function
+  debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
   }
 
   events() {
     const cartButtons = document.querySelectorAll(".add_to_cart");
     cartButtons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        this.createCartItem(button);
-      });
+      button.addEventListener(
+        "click",
+        this.debounce((e) => {
+          e.preventDefault();
+          this.createCartItem(button);
+        }, 300)
+      );
     });
 
     this.cartRemoveButtons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        const programElement = e.target.closest(".program");
-        const productId = programElement.getAttribute("data-id");
-        const cartItem = this.cartItems.find(
-          (item) => item.productId === productId
-        );
+      button.addEventListener(
+        "click",
+        this.debounce((e) => {
+          e.preventDefault();
+          const programElement = e.target.closest(".program");
+          const productId = programElement.getAttribute("data-id");
+          const cartItem = this.cartItems.find(
+            (item) => item.productId === productId
+          );
 
-        if (cartItem) {
-          this.removeItemFromCart(cartItem.title, cartItem.id);
-        } else {
-          button.style.disabled = true;
-        }
-      });
+          if (cartItem) {
+            this.removeItemFromCart(cartItem.title, cartItem.id);
+          } else {
+            button.style.disabled = true;
+          }
+        }, 300)
+      );
     });
   }
 
@@ -103,8 +147,8 @@ class MyCart {
     await this.loadCartItems();
     if (window.location.href.includes("/shop/cart/")) {
       this.updateCartUI();
+      this.initializeProductQuantities();
     }
-    this.initializeProductQuantities();
   }
 
   initializeProductQuantities() {
@@ -272,6 +316,7 @@ class MyCart {
   }
 
   async loadCartItems() {
+    if (this.cartItems.length > 0) return;
     try {
       const response = await axios.get(
         `${mrjData.root_url}/wp-json/wp/v2/cart/`,
