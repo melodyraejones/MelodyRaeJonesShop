@@ -101,7 +101,7 @@ get_header();
                     
                     ?>
                    <div class="program" data-id="<?php echo get_the_ID(); ?>" <?php echo $is_fav ? 'data-is-fav="true"' : ''; ?>>
-                        <img src="<?php echo esc_url($program_image); ?>" class="program-img" alt="<?php the_title(); ?>" />
+                        <img data-src="<?php echo esc_url($program_image); ?>" class="program-img lazyload" alt="<?php the_title(); ?>" />
                         <div class="program-content">
                             <p class="program-title"><?php the_title(); ?></p>
                           

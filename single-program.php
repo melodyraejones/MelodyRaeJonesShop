@@ -23,7 +23,7 @@ $product_id = get_the_ID();
             </div>
     <div class="product grid grid--2-cols" data-id="<?php echo get_the_ID(); ?>">
         <div class="product-image-box">
-            <img class="product-img" src="<?php echo esc_url($product_image_url); ?>" alt="<?php the_title_attribute(); ?>">
+            <img class="product-img lazyload" data-src="<?php echo esc_url($product_image_url); ?>" alt="<?php the_title_attribute(); ?>">
             <div class="product-price">
                 <span class="price-amount">Price: $<?php echo esc_html(number_format((float)$product_price, 2)); ?></span>
             </div>

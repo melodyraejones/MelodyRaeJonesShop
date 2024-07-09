@@ -10,6 +10,13 @@ require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
 require get_template_directory() . '/inc/customizer.php';
 require get_template_directory() . '/inc/timer.php';
 
+// lazy load
+function enqueue_lazyload_scripts() {
+    wp_enqueue_script('lazysizes', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js', array(), '5.3.2', true);
+}
+add_action('wp_enqueue_scripts', 'enqueue_lazyload_scripts');
+
+
 // Cart URL
 function get_cart_url() {
     if (defined('WP_ENV') && WP_ENV === 'production') {

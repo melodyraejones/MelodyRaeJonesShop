@@ -36,7 +36,7 @@ $product_price = get_field('program_price', $page_id);
     <div class="product grid grid--2-cols">
         <div class="product-image-box product-image-box-wisdom">
             <?php if ($featured_image_url) : ?>
-                <img class="product-img" src="<?php echo esc_url($featured_image_url); ?>" alt="<?php echo esc_attr($page->post_title); ?>">
+                <img class="product-img lazyload" data-src="<?php echo esc_url($featured_image_url); ?>" alt="<?php echo esc_attr($page->post_title); ?>">
             <?php else : ?>
                 <img class="product-img" src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="Expand Your Wisdom Toolkit">
             <?php endif; ?>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <link rel="icon" href="<?php echo get_theme_file_uri('/images/mrj_icon.png'); ?>" type="image/x-icon" />
+  <link rel="icon" data-src="<?php echo get_theme_file_uri('/images/mrj_icon.png'); ?>" type="image/x-icon" />
 
   <meta name ="viewport" content ="width=device-width, initial-scale=1.0" />
     <?php wp_head(); ?>   
@@ -17,7 +17,7 @@
                 <div class="clearfix">                    
                   	<div align="center">
 						<div class="logo">
-						<img src="<?php echo get_theme_file_uri('./images/logo_white.png'); ?>" alt="company-logo" ></div>
+						<img data-src="<?php echo get_theme_file_uri('./images/logo_white.png'); ?>" alt="company-logo" class="lazyload"></div>
 					</div>                                    
                 </div>
             </div>

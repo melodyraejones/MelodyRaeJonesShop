@@ -71,7 +71,7 @@ if ($query->have_posts()) :
             <div class="product grid grid--2-cols" data-id="<?php echo get_the_ID(); ?>">
                 <div class="product-image-box fav-image-box">
                     <div class="best-value-label">Best Value</div>
-                    <img class="product-img fav-img" src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
+                    <img class="product-img fav-img lazyload" data-src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="<?php echo esc_attr(get_the_title()); ?>">
                     <p class="product-price">
                         <span class="original-price">$<?php echo esc_html(number_format((float)$original_price, 2)); ?></span>
                         <span class="discounted-price">$<?php echo esc_html(number_format((float)$discounted_price, 2)); ?></span>

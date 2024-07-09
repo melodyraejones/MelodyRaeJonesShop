@@ -66,7 +66,7 @@ if (is_user_logged_in()) {
                         <div class="card_bkg">
                             <div class="card_box" style="background:#EDEBEC">
                                 <div class="card_cont">
-                                    <div align="center"><?php the_post_thumbnail(); ?></div>
+                                <div align="center"><?php the_post_thumbnail('full', ['loading' => 'lazy']); ?></div>
                                     <br>
                                     <br>
                                     <p>You have within you two guiding forces – your logic and your intuition.</p>
@@ -79,7 +79,7 @@ if (is_user_logged_in()) {
                                     <p>Does that sound scary – good! That means you are willing to <strong>challenge your own perspective</strong> and change your old story… and that is where powerful change comes from.</p>
                                     <p><strong>I wish to remind you that you are incredibly wise and intuitive!</strong> Even if you have forgotten, or wish you trusted it more often, your link to your intuitive wisdom is alive and well within you, just waiting for opportunities to be allowed and acted upon.</p>
                                     <p>Many Blessings…</p>
-                                    <img src="<?php echo get_theme_file_uri('./images/logo_signature.png'); ?>" alt="signature">
+                                    <img src="<?php echo get_theme_file_uri('./images/logo_signature.png'); ?>" alt="signature" loading="lazy">
                                 </div><!--End: Card Cont-->
 
                                 <div class="card_foot">

@@ -56,9 +56,9 @@ if (!$actual_price) {
     <div class="product grid grid--2-cols">
         <div class="product-image-box product-image-box-wisdom">
             <?php if ($featured_image_url) : ?>
-                <img class="product-img" src="<?php echo esc_url($featured_image_url); ?>" alt="<?php echo esc_attr($page->post_title); ?>">
+                <img class="product-img lazyload" data-src="<?php echo esc_url($featured_image_url); ?>" alt="<?php echo esc_attr($page->post_title); ?>">
             <?php else : ?>
-                <img class="product-img" src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="Expand Your Wisdom Toolkit">
+                <img class="product-img lazyload" data-src="<?php echo get_theme_file_uri('./images/mel_faves.png'); ?>" alt="Expand Your Wisdom Toolkit">
             <?php endif; ?>
             <?php if ($actual_price && $discounted_price) : ?>
                 <div class="price-container">
