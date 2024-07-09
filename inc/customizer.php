@@ -6,8 +6,19 @@ function mrj_enqueue_styles() {
 add_action('wp_enqueue_scripts', 'mrj_enqueue_styles');
 
 function mrj_customize_register($wp_customize) {
-    error_log('Customizer: Registering sections, settings, and controls.');
 
+    $wp_customize->add_setting('mrj_main_menu_items', array(
+        'default' => 'https://melodyraejones.com/|Home,melody.html|About,https://melodyraejones.com/offerings/main.html|Offerings,https://melodyraejones.com/events/upcoming.html|Events,https://melodyraejones.com/ecards/inspirations.html|e-Cards,https://melodyraejones.com/testimonials.html|Praise,https://melodyraejones.com/blog/articles.html|Blog,contact.html|Contact,https://melodyraejones.com/members/login.html|Member Login',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    // Add Control for Main Menu Items
+    $wp_customize->add_control('mrj_main_menu_items', array(
+        'label' => __('Main Menu Items (comma separated URLs and Labels)', 'mrj_theme'),
+        'section' => 'mrj_header_section',
+        'settings' => 'mrj_main_menu_items',
+        'type' => 'textarea',
+    ));
     // Add Section for Header
     $wp_customize->add_section('mrj_header_section', array(
         'title' => __('Header Settings', 'mrj_theme'),
@@ -94,12 +105,28 @@ function mrj_customize_register($wp_customize) {
         'type' => 'textarea',
     ));
     
+// Add Setting for Main Menu Items
+$wp_customize->add_setting('mrj_main_menu_items', array(
+    'default' => 'https://melodyraejones.com/|Home,melody.html|About,https://melodyraejones.com/offerings/main.html|Offerings,https://melodyraejones.com/events/upcoming.html|Events,https://melodyraejones.com/ecards/inspirations.html|e-Cards,https://melodyraejones.com/testimonials.html|Praise,https://melodyraejones.com/blog/articles.html|Blog,contact.html|Contact,https://melodyraejones.com/members/login.html|Member Login',
+    'sanitize_callback' => 'sanitize_text_field',
+));
+
+// Add Control for Main Menu Items
+$wp_customize->add_control('mrj_main_menu_items', array(
+    'label' => __('Main Menu Items (comma separated URLs and Labels)', 'mrj_theme'),
+    'section' => 'mrj_header_section',
+    'settings' => 'mrj_main_menu_items',
+    'type' => 'textarea',
+));
     // Add Section for Footer
     $wp_customize->add_section('mrj_footer_section', array(
         'title' => __('Footer Settings', 'mrj_theme'),
         'priority' => 40,
     ));
     
+
+
+
     // Add Setting for Footer Background Color
     $wp_customize->add_setting('mrj_footer_bg_color', array(
         'default' => '#643482',
@@ -246,7 +273,7 @@ function mrj_customize_register($wp_customize) {
 add_action('customize_register', 'mrj_customize_register');
 
 function mrj_customizer_css() {
-    error_log('Applying Customizer CSS settings.');
+
     $header_bg_color = get_theme_mod('mrj_header_bg_color', '#ffffff');
     $header_text_color = get_theme_mod('mrj_header_text_color', '#000000');
     $header_hover_color = get_theme_mod('mrj_header_hover_color', '#6a9c07');
