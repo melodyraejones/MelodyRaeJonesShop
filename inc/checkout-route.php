@@ -15,6 +15,11 @@ function normalize_product_name($name) {
 
 // Function to create a Stripe Checkout Session
 function mrj_create_stripe_checkout_session(WP_REST_Request $request) {
+    // Nonce verification 
+    $nonce = $request->get_param('security');
+    if (!wp_verify_nonce($nonce, 'create_checkout_session_nonce')) {
+        return new WP_REST_Response(['error' => 'Invalid nonce'], 403);
+    }
     $user_id = get_current_user_id();
     $user_info = get_userdata($user_id);
     if (!$user_info) {

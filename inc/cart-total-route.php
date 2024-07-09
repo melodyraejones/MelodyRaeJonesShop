@@ -1,5 +1,11 @@
 <?php
 function mrjCartTotal(WP_REST_Request $request) {
+     // Nonce verification
+     $nonce = $request->get_param('security');
+     if (!wp_verify_nonce($nonce, 'cart_total_nonce')) {
+         return new WP_REST_Response(['error' => 'Invalid nonce'], 403);
+     }
+ 
     if (!is_user_logged_in()) {
         return new WP_Error('no_auth', 'Authorization required', ['status' => 401]);
     }
