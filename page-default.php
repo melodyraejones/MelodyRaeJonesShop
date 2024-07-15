@@ -26,7 +26,7 @@ Template Name: Default Page
             font-family: "Arimo", sans-serif;
             line-height: 1.6;
             background-color: #ffffff; /* Optional: set a background color */
-      
+        
         }
         h1 {
             font-family: "AvanteGarde", sans-serif;

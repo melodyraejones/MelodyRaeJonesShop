@@ -463,6 +463,7 @@ add_filter('the_title', function($title, $id = null) {
 
 function mrj_files() {
     if (!is_page_template('page-default.php')) {
+        wp_enqueue_style('wp-block-library');
         // Enqueue a CSS file
         wp_enqueue_style('mrj_extra_styles', get_theme_file_uri('/css/main.css'));
     }
