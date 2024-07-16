@@ -45,7 +45,7 @@
                 <div class="footer-widget social-widget clearfix">
                     <h2>Follow Me</h2>
                     <div class="text">
-                        <div class="social2" style="margin-top:-10px"><br />
+                        <div class="social2" style="margin-top:-15px"><br />
                             <?php
                             $social_links = array(
                                 'facebook' => get_theme_mod('mrj_facebook_link', ''),
