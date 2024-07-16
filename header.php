@@ -40,7 +40,7 @@
               <ul class="navigation clearfix">
                 <?php
                 // Fetch main menu items
-                $main_menu_items = get_theme_mod('mrj_main_menu_items', 'https://melodyraejones.com/|Home,melody.html|About,https://melodyraejones.com/offerings/main.html|Offerings,https://melodyraejones.com/events/upcoming.html|Products,|Events,https://melodyraejones.com/ecards/inspirations.html|e-Cards,https://melodyraejones.com/testimonials.html|Praise,https://melodyraejones.com/blog/articles.html|Blog,contact.html|Contact,https://melodyraejones.com/members/login.html|Member Login');
+                $main_menu_items = get_theme_mod('mrj_main_menu_items', 'https://melodyraejones.com/|Home,melody.html|About,https://melodyraejones.com/offerings/main.html|Offerings,https://melodyraejones.com/events/upcoming.html|Events,https://melodyraejones.com/ecards/inspirations.html|Products,|e-Cards,https://melodyraejones.com/testimonials.html|Praise,https://melodyraejones.com/blog/articles.html|Blog,contact.html|Contact,https://melodyraejones.com/members/login.html|Member Login');
                 $menu_items = explode(',', $main_menu_items);
                 foreach ($menu_items as $item) {
                   list($url, $label) = explode('|', $item);
