@@ -82,7 +82,7 @@
         <div class="auto-container">
             <div class="copyright-text">
                 <h4>Copyright &copy; 2006 &ndash; <script language="JavaScript" type="text/javascript">document.write((new Date()).getFullYear());</script> Melody Rae Jones &ndash; All Rights Reserved<br />
-                    <a href="disclaimer.html" target="_blank">Disclaimer</a></h4>
+                    <a href="https://melodyraejones.com/disclaimer.html" target="_blank">Disclaimer</a></h4>
             </div>
         </div>
     </div>
