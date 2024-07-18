@@ -11,54 +11,55 @@ Template Name: Default Page
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php wp_head(); ?>
     <style>
-        /* Reset custom theme styles */
-        body, html, .site {
-            all: unset;
+        /* Scoped Reset Styles for Default Page Template */
+        .default-page * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        .default-page {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-        /* Apply some basic styling */
-        body {
             font-family: "Arimo", sans-serif;
             line-height: 1.6;
             background-color: #ffffff; /* Optional: set a background color */
-        
         }
-        h1 {
+
+        .default-page h1 {
             font-family: "AvanteGarde", sans-serif;
             font-size: 24px;
             color: #6a9c07;
             margin-top: 20px; /* Add some space above the title */
             text-align: center; /* Center align the title */
         }
-        p, div, span, a {
+
+        .default-page p, .default-page div, .default-page span, .default-page a {
             font-family: "Arimo", sans-serif;
             font-size: 18px;
             color: #333;
-            margin: 0;
-            padding: 0;
         }
-        .site-header, .site-footer {
+
+        .default-page .site-header, .default-page .site-footer {
             margin: 0 auto;
             width: 90%;
         }
-        .site-content {
+
+        .default-page .site-content {
             flex: 1;
             padding: 20px;
             margin: 0 auto;
             width: 90%;
         }
+
         /* Optional: Add additional styling as needed */
     </style>
 </head>
 <body <?php body_class(); ?>>
     <?php get_header(); ?>
 
-    <div id="content" class="site-content">
+    <div id="content" class="default-page site-content">
         <main id="main" class="site-main" role="main">
             <?php
             while (have_posts()) :

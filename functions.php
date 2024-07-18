@@ -467,7 +467,7 @@ function mrj_files() {
         // Enqueue a CSS file
         wp_enqueue_style('mrj_extra_styles', get_theme_file_uri('/css/main.css'));
     }
-    
+   
     // This script adds support for various browsers that don't support ES modules or certain modern JavaScript features.
     add_action('wp_footer', function () {
         echo '<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>';
@@ -477,6 +477,9 @@ function mrj_files() {
 
 add_action('wp_enqueue_scripts', 'mrj_files');
 
+function enqueue_footer_styles() {
+    wp_enqueue_style('mrj_footer_styles', get_template_directory_uri() . '/css/footer.css');
+}
 
 
 function mrj_features() {

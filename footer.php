@@ -1,3 +1,7 @@
+<?php
+enqueue_footer_styles();
+?>
+
 <footer class="main-footer">
     <div class="auto-container">
         <div class="footer-row">
