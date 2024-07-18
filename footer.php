@@ -34,7 +34,7 @@
                     <div class="widget-content">
                         <ul class="list" style="margin-left:10px">
                             <li><a href="https://calendly.com/melody_rae_jones/personal-session" target="_blank">Book a Personal Session</a></li>
-                            <li><a href="https://melodyraejones.com/contact/discovery-session/" target="_blank">Request a Discovery Session</a></li>
+                            <li><a href="https://melodyraejones.com/discovery_session.html" target="_blank">Request a Discovery Session</a></li>
                             <li><a href="products/free_resources.html">Free Resources</a></li>
                             <li><a href="events/upcoming.html">Upcoming Events</a></li>
                             <li><a href="members/login.html">Member Login</a></li>
