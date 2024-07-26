@@ -65,7 +65,6 @@ enqueue_footer_styles();
                             if ($social_links['instagram']) {
                                 echo '<a href="' . esc_url($social_links['instagram']) . '" title="Follow me on Instagram" target="_blank" style="text-decoration:none"><i class="icon-instagram"></i></a>';
                             }
-                           
                             ?>
                         </div>
                     </div>
