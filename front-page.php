@@ -21,7 +21,7 @@ get_header();
             <div>
                 <div>
                     <h3 class="shop-list">Soul Notes Meditations</h3>
-                    <a href="" class="shop-link"><i class="fas fa-pray"></i> Daily Practices Series's</a>       
+                    <a href="" class="shop-link"><i class="fas fa-pray"></i> Daily Practices Series</a>       
                 </div>
                 <a href="<?php echo esc_url(home_url('/mels-favorite')); ?>" class="shop-link shop-link-faves"><i class="fas fa-heart"></i> Mel's Faves</a>       
                 <div>
