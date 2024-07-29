@@ -28,9 +28,9 @@ Template Name: Default Page
         }
 
         .default-page h1 {
-            font-family: "AvanteGarde", sans-serif;
-            font-size: 24px;
-            color: #6a9c07;
+            font-family: "Courgette", sans-serif;
+            font-size: 30px;
+            color: #562973;
             margin-top: 20px; /* Add some space above the title */
             text-align: center; /* Center align the title */
         }
